@@ -8,9 +8,19 @@ contract rentEscrow{
         uint256 escrowValue;
         string contractDetail;
         string status;
+        redeemProposal redeemProposal;
+    }
+
+    struct redeemProposal {
+        uint tenantShare;
+        uint landlordShare;
+        uint feeShare;
+        address feeAddress;
+        uint proposalStatus; // 100 Proposed 200 Redeemed by tenant 202 Redemed via Dispute Resolution
     }
 
     mapping(uint => rentContract) public rentContractsMapping;
+
     // will use this to search contracts by address
     mapping(address => uint[]) public addressMapping;
     uint public nextRentId = 0;
@@ -46,6 +56,58 @@ contract rentEscrow{
 
         updateAddressMapping(_rentId);
 
+    }
+
+    function createRedeemProposal (uint _rentId, uint _tenantShare, uint _landlordShare, uint _feeShare, address _feeAddress  ) external {
+        
+        uint shareSum = _tenantShare + _landlordShare + _feeShare;
+        require(shareSum == 100, "TenantShare + Landlord Share + Fee Share is not 100%" );
+
+        //only landlord can create redeemProposal
+        // test required
+        require(msg.sender ==  rentContractsMapping[_rentId].landlord, "Only Landlord can create redeem proposal");
+
+        rentContractsMapping[_rentId].redeemProposal.tenantShare = _tenantShare;
+        rentContractsMapping[_rentId].redeemProposal.landlordShare = _landlordShare;
+        rentContractsMapping[_rentId].redeemProposal.feeShare = _feeShare;
+        //Later: fee address must be protected
+        rentContractsMapping[_rentId].redeemProposal.feeAddress = _feeAddress;
+        rentContractsMapping[_rentId].redeemProposal.proposalStatus = 100;
+    
+    }
+
+    function acceptRedeemProposal(uint _rentId) external {
+        //only tenant can accept redeemProposal
+        // test required
+        require(msg.sender ==  rentContractsMapping[_rentId].tenant,"Only tenant can accept redeem proposal");
+
+        
+        uint escrowValue = rentContractsMapping[_rentId].escrowValue;
+        // send to tenant
+        address payable tenantAddress = payable(rentContractsMapping[_rentId].tenant);
+        uint escrowTenant = escrowValue * rentContractsMapping[_rentId].redeemProposal.tenantShare / 100;
+
+
+        uint sendToLandlord = escrowValue * rentContractsMapping[_rentId].redeemProposal.landlordShare / 100;
+        uint sendToFee = escrowValue * rentContractsMapping[_rentId].redeemProposal.feeShare / 100;
+
+        //values to send must equal to escrowValue
+        require((escrowTenant + sendToLandlord + sendToFee) == escrowValue, "TenantShare + Landlord Share + Fee Share does not equal Escrow Value");
+
+        // status must be 100 (proposed), to avoid double dip
+        require(rentContractsMapping[_rentId].redeemProposal.proposalStatus == 100, "Escrow has been alread redeemed.");
+        rentContractsMapping[_rentId].redeemProposal.proposalStatus = 200;
+
+        //Later: would it make sense to stop any redemptions in case sum of individual escrows is below total balance ???
+        
+        //Sending
+        tenantAddress.transfer(escrowTenant);
+        
+
+
+
+
+        
     }
  
 

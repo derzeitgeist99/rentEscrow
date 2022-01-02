@@ -54,5 +54,9 @@ contract("rentEscrow", async accounts => {
 
     })
 
+    // it("Should create redeemAproval", async() => {
+    //     await 
+    // })
+
 
 })
