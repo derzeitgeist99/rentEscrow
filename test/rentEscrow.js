@@ -1,5 +1,7 @@
 const rentEscrow = artifacts.require("rentEscrow");
 const { toBN } = web3.utils;
+const {expectRevert} = require("@openzeppelin/test-helpers");
+
 
 
 //Later: need to make this ready for BigNumbers
@@ -35,11 +37,14 @@ contract("rentEscrow", async accounts => {
         
         //console.log(`GasUsed: ${gasUsed}`)
         //console.log(`GasPrice: ${gasPrice}`)
-        console.log(`GasSpent: ${gasSpent}`)
+        //console.log(`GasSpent: ${gasSpent}`)
 
         return gasSpent
 
     }
+    // central address to collect fees
+    // Later: should be managed in a better way in the contract
+    const feeAddress = accounts[9]
 
     it("should create rentContract from account 0", async () =>{
         
@@ -80,16 +85,94 @@ contract("rentEscrow", async accounts => {
         assert(initialContractBalance + escrowValue,terminalContractBalance)
         assert(initialTenantBalance - escrowValue - gasSpent,terminalTenantBalance)
 
-        console.log(`Initial Balance: ${initialTenantBalance}`)
-        console.log(`GasSpent: ${gasSpent}`)
-        console.log(`escrowValue: ${escrowValue}`)
-        console.log(`Terminal Balance: ${terminalTenantBalance}`)
+        // console.log(`Initial Balance: ${initialTenantBalance}`)
+        // console.log(`GasSpent: ${gasSpent}`)
+        // console.log(`escrowValue: ${escrowValue}`)
+        // console.log(`Terminal Balance: ${terminalTenantBalance}`)
 
     }) 
+    //Later: we need a proper matrix of sitations. Failed sums, non existent addresses, contracts, etc
+    //Later: we need to load this from external file
+    //Later: test name should be part of iterable?
 
-    // it("Should create redeemAproval", async() => {
-    //     await 
-    // })
+        let situationList = []
+        let path = "Happy" 
+        let [...situationInput] = [rentId = 0, tenantShare = 50,landlordShare= 40,feeShare= 10,feeAddress]
+        let situationOutput = feeAddress
+        let fromAddress = accounts[0]
+        situationList.push([path, situationInput,situationOutput,fromAddress])
+
+        path = "Unhappy" 
+        situationInput = [rentId = 0, tenantShare = 51,landlordShare= 40,feeShare= 10,feeAddress]
+        situationOutput = "TenantShare + Landlord Share + Fee Share is not 100%"
+        fromAddress = accounts[0]
+        situationList.push([path, situationInput,situationOutput,fromAddress])
+
+        path = "Unhappy" 
+        situationInput = [rentId = 0, tenantShare = 50,landlordShare= 40,feeShare= 10,feeAddress]
+        situationOutput = "Only Landlord can create redeem proposal"
+        fromAddress = accounts[1]
+        situationList.push([path, situationInput,situationOutput,fromAddress])
+
+
+    // Loops through situations and for each creates special test
+    // Happy and unhappy paths have different logic. 
+    for (const i of situationList) {
+        switch(i[0]){
+            case "Happy": 
+                it(`Should create redeemProposal`, async() =>{
+                    receipt = await rEsc.createRedeemProposal(...i[1],{from:i[3]})
+                    const rentContracts = await rEsc.rentContractsMapping(i[1][0])
+                    assert(rentContracts.redeemProposal.feeAddress = i[2])
+
+                })
+                break
+            case "Unhappy": 
+                it(`Should not create redeemProposal`, async() =>{
+                    await expectRevert(rEsc.createRedeemProposal(...i[1],{from:i[3]}), i[2])
+                })
+                break
+
+        }    
+        
+        }
+
+        //Happy path of acceptRedeemProposal
+        let i = situationList[0]
+    
+        it(`Should acceptRedeemProposal`, async() =>{
+            //resetting the rentContract
+            await rEsc.createRedeemProposal(...i[1],{from:i[3]})
+            //getting the tenantAddress
+            const rentContracts = await rEsc.rentContractsMapping(i[1][0])
+            tenantAddress = rentContracts.tenant
+
+            //getting Balance
+            initialContractBalance = await getContractBalance()
+            initialTenantBalance = await getAddressBalance(tenantAddress)
+
+            receipt = await rEsc.acceptRedeemProposal(i[1][0],{from:tenantAddress})
+            
+            terminalContractBalance = await getContractBalance()
+            terminalTenantBalance = await getAddressBalance(tenantAddress)
+            gasSpent = await getGasSpent(receipt)
+
+     
+            assert(terminalContractBalance,0)
+            assert(initialTenantBalance + 500  - gasSpent,terminalTenantBalance)
+
+        })
+
+    // Unhappy path with non-tenant
+    it("Should not acceptRedeemProposal", async() => {
+         //resetting the rentContract
+         await rEsc.createRedeemProposal(...i[1],{from:i[3]})
+         // calling from random adress
+
+         await expectRevert(rEsc.acceptRedeemProposal(i[1][0],{from: accounts[9]}),"Only tenant can accept redeem proposal")
+         await expectRevert(rEsc.acceptRedeemProposal(i[1][0],{from: accounts[0]}),"Only tenant can accept redeem proposal")
+
+    } )
 
 
 })

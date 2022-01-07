@@ -87,12 +87,18 @@ contract rentEscrow{
         address payable tenantAddress = payable(rentContractsMapping[_rentId].tenant);
         uint escrowTenant = escrowValue * rentContractsMapping[_rentId].redeemProposal.tenantShare / 100;
 
+         // send to landlord
+        address payable landlordAddress = payable(rentContractsMapping[_rentId].landlord);
+        uint escrowLandlord = escrowValue * rentContractsMapping[_rentId].redeemProposal.landlordShare / 100;
 
-        uint sendToLandlord = escrowValue * rentContractsMapping[_rentId].redeemProposal.landlordShare / 100;
-        uint sendToFee = escrowValue * rentContractsMapping[_rentId].redeemProposal.feeShare / 100;
+        // send to fee
+        address payable feeAddress = payable(rentContractsMapping[_rentId].redeemProposal.feeAddress);
+        uint fee = escrowValue * rentContractsMapping[_rentId].redeemProposal.feeShare / 100;
+
+
 
         //values to send must equal to escrowValue
-        require((escrowTenant + sendToLandlord + sendToFee) == escrowValue, "TenantShare + Landlord Share + Fee Share does not equal Escrow Value");
+        require((escrowTenant + escrowLandlord + fee) == escrowValue, "TenantShare + Landlord Share + Fee Share does not equal Escrow Value");
 
         // status must be 100 (proposed), to avoid double dip
         require(rentContractsMapping[_rentId].redeemProposal.proposalStatus == 100, "Escrow has been alread redeemed.");
@@ -102,6 +108,9 @@ contract rentEscrow{
         
         //Sending
         tenantAddress.transfer(escrowTenant);
+        landlordAddress.transfer(escrowLandlord);
+        feeAddress.transfer(fee);
+
         
 
 
