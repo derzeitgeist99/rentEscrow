@@ -49,6 +49,7 @@ contract("rentEscrow", async accounts => {
     it("should create rentContract from account 0", async () =>{
         
         let receipt = await rEsc.proposeNewContract (1000, "HelloWorld")
+        console.log(receipt)
         
         const rentContracts = await rEsc.rentContractsMapping(0)
         assert.equal(rentContracts.escrowValue, 1000)
@@ -172,6 +173,12 @@ contract("rentEscrow", async accounts => {
          await expectRevert(rEsc.acceptRedeemProposal(i[1][0],{from: accounts[9]}),"Only tenant can accept redeem proposal")
          await expectRevert(rEsc.acceptRedeemProposal(i[1][0],{from: accounts[0]}),"Only tenant can accept redeem proposal")
 
+    } )
+
+    // happy path to reject proposal by tenant
+    it("Should reject redeem proposal", async () => {
+         //resetting the rentContract
+         await rEsc.createRedeemProposal(...i[1],{from:i[3]})
     } )
 
 

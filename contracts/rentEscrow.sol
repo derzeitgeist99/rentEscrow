@@ -16,7 +16,7 @@ contract rentEscrow{
         uint landlordShare;
         uint feeShare;
         address feeAddress;
-        uint proposalStatus; // 100 Proposed 200 Redeemed by tenant 202 Redemed via Dispute Resolution
+        uint proposalStatus; /// @dev 100 Proposed 200 Redeemed by tenant 202 Redemed via Dispute Resolution 301 rejected by landlord 302 rejected by tenant
     }
 
     mapping(uint => rentContract) public rentContractsMapping;
@@ -36,7 +36,7 @@ contract rentEscrow{
 
     }
 
-    function proposeNewContract (uint256 _escrowValue, string memory _contractDetail) external {
+    function proposeNewContract (uint256 _escrowValue, string memory _contractDetail) external returns(uint256 rentId ){
         rentContract memory myRentContract;
      
         myRentContract.landlord = msg.sender;
@@ -45,7 +45,9 @@ contract rentEscrow{
         
         rentContractsMapping[nextRentId] = myRentContract; //Later: Change to nextId to hashed ID
         updateAddressMapping(nextRentId);
+        rentId = nextRentId;
         nextRentId += 1;
+        return(rentId);
 
     }
 
@@ -95,8 +97,6 @@ contract rentEscrow{
         address payable feeAddress = payable(rentContractsMapping[_rentId].redeemProposal.feeAddress);
         uint fee = escrowValue * rentContractsMapping[_rentId].redeemProposal.feeShare / 100;
 
-
-
         //values to send must equal to escrowValue
         require((escrowTenant + escrowLandlord + fee) == escrowValue, "TenantShare + Landlord Share + Fee Share does not equal Escrow Value");
 
@@ -109,14 +109,30 @@ contract rentEscrow{
         //Sending
         tenantAddress.transfer(escrowTenant);
         landlordAddress.transfer(escrowLandlord);
-        feeAddress.transfer(fee);
+        feeAddress.transfer(fee);    
+    }
 
+    ///@notice Use this function to reject redeem proposal. Will send it to the resolution centre
+    ///@param _rentId identifies the contract between tenant and landlord
+
+    function rejectRedeemProposal(uint _rentId) external {
+        ///@dev UX has a say here, currently tenant and landlord can reject at any time
+        require((msg.sender ==  rentContractsMapping[_rentId].tenant || msg.sender == rentContractsMapping[_rentId].landlord), "Only tenant or landlord can accept redeem proposal");
         
+        ///@custom:later probably better to re-write to allowed statuses
+        require(
+            rentContractsMapping[_rentId].redeemProposal.proposalStatus != 301 &&
+            rentContractsMapping[_rentId].redeemProposal.proposalStatus != 302,"Already rejected");
+        require(rentContractsMapping[_rentId].redeemProposal.proposalStatus != (200),"Already accepted" );
 
+        if(msg.sender == rentContractsMapping[_rentId].landlord) {
+            rentContractsMapping[_rentId].redeemProposal.proposalStatus = 301;
+        }
+        else if (msg.sender == rentContractsMapping[_rentId].tenant){
+             rentContractsMapping[_rentId].redeemProposal.proposalStatus = 302;
 
+        }
 
-
-        
     }
  
 
