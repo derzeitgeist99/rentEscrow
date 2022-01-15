@@ -25,7 +25,11 @@ contract rentEscrow{
     mapping(address => uint[]) public addressMapping;
     uint public nextRentId = 0;
 
-    // Should go to some utils contract
+    ///@dev in order to give some feedback that rentcontract was created, we will emit its id. Later maybe be filled with some other
+    event rentContractId (uint _rentId);
+    event rentContractId2 (uint _rentId);
+
+    ///@dev Should go to some utils contract
 
     function updateAddressMapping (uint _rentId) internal {
         addressMapping[msg.sender].push(_rentId);
@@ -36,7 +40,7 @@ contract rentEscrow{
 
     }
 
-    function proposeNewContract (uint256 _escrowValue, string memory _contractDetail) external returns(uint256 rentId ){
+    function proposeNewContract (uint256 _escrowValue, string memory _contractDetail) external {
         rentContract memory myRentContract;
      
         myRentContract.landlord = msg.sender;
@@ -45,9 +49,9 @@ contract rentEscrow{
         
         rentContractsMapping[nextRentId] = myRentContract; //Later: Change to nextId to hashed ID
         updateAddressMapping(nextRentId);
-        rentId = nextRentId;
+        emit rentContractId(nextRentId);
+        
         nextRentId += 1;
-        return(rentId);
 
     }
 

@@ -1,5 +1,5 @@
 const rentEscrow = artifacts.require("rentEscrow");
-const { toBN } = web3.utils;
+const { toBN,toNumber } = web3.utils;
 const {expectRevert} = require("@openzeppelin/test-helpers");
 
 
@@ -42,14 +42,30 @@ contract("rentEscrow", async accounts => {
         return gasSpent
 
     }
+
+    const parseEventValue = (receipt,eventName) => {
+        logs = receipt.receipt.logs
+        result = logs.filter(log => log.event=== eventName  )
+        return result[0].args["0"]
+
+    }
+
+    const createAndAccept = async (landlord,tenant, escrow,detail) =>{
+          
+        let receiptPropose = await rEsc.proposeNewContract (escrow, detail, {from: landlord})
+        rentId = parseEventValue(receiptPropose,"rentContractId")
+
+        receiptAccept = await rEsc.acceptNewContract(rentId, {from: tenant, value: escrow})
+        return [toNumber(rentId),receiptPropose, receiptAccept]
+
+    }
     // central address to collect fees
     // Later: should be managed in a better way in the contract
     const feeAddress = accounts[9]
 
     it("should create rentContract from account 0", async () =>{
         
-        let receipt = await rEsc.proposeNewContract (1000, "HelloWorld")
-        console.log(receipt)
+        let receipt= await rEsc.proposeNewContract (1000, "HelloWorld")
         
         const rentContracts = await rEsc.rentContractsMapping(0)
         assert.equal(rentContracts.escrowValue, 1000)
@@ -162,7 +178,7 @@ contract("rentEscrow", async accounts => {
             assert(terminalContractBalance,0)
             assert(initialTenantBalance + 500  - gasSpent,terminalTenantBalance)
 
-        })
+            })
 
     // Unhappy path with non-tenant
     it("Should not acceptRedeemProposal", async() => {
@@ -175,11 +191,34 @@ contract("rentEscrow", async accounts => {
 
     } )
 
-    // happy path to reject proposal by tenant
-    it("Should reject redeem proposal", async () => {
-         //resetting the rentContract
-         await rEsc.createRedeemProposal(...i[1],{from:i[3]})
+    // happy path to reject proposal by landlord
+    it("Should reject redeem proposal by landlord", async () => {
+        receipts = await createAndAccept(accounts[0],accounts[1], 1000, "Hallo Welt")
+        rentId = receipts[0]
+        await rEsc.rejectRedeemProposal(rentId, {from: accounts[0]})
+        contract = await rEsc.rentContractsMapping(rentId)
+        assert(contract.redeemProposal.proposalStatus == 301)
+        
+
     } )
 
+    // happy path to reject proposal by tenant
+    it("Should reject redeem proposal by tenant", async () => {
+        receipts = await createAndAccept(accounts[0],accounts[1], 1000, "Hallo Welt")
+        rentId = receipts[0]
+        await rEsc.rejectRedeemProposal(rentId, {from: accounts[1]})
+        contract = await rEsc.rentContractsMapping(rentId)
+        assert(contract.redeemProposal.proposalStatus == 302)
+        
+
+    } )
+
+    // unhappy path to reject proposal by random address
+    it("Should refuse to reject redeem proposal by landlord", async () => {
+        receipts = await createAndAccept(accounts[0],accounts[1], 1000, "Hallo Welt")
+        rentId = receipts[0]
+        await expectRevert(rEsc.rejectRedeemProposal(rentId, {from: accounts[3]}),"Only tenant or landlord can accept redeem proposal")
+   
+    } )
 
 })
