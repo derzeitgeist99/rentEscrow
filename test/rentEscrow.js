@@ -16,6 +16,10 @@ contract("rentEscrow", async accounts => {
     before (async () =>{
         rEsc = await rentEscrow.new();
         resolver = await resolverContract.new();
+        contractAddress = await resolver.address
+        receipt = await resolver.setRentEscrowAddress(contractAddress)
+        
+
     })
     // let contractAddress = await rEsc.address
     // console.log(contractAddress)
@@ -183,18 +187,17 @@ contract("rentEscrow", async accounts => {
     } )
 
     // testing resolver
-    it("Should return tenant address", async () => {
+    it("Should return contractId", async () => {
         receipts = await createAndAccept(rEsc,accounts[0],accounts[1], 999, "Bonjour Le Mond")
         
         rentId = receipts[0]
         console.log(rentId)
-        receipt = await resolver.getContractToResolve(rentId)
+        receipt = await resolver.getNewContractToResolve()
         console.log(receipt.logs[0])
-        tenant = parseEventValue(receipt, "sendTenant")
-        message = parseEventValue(receipt, "sendMessage")
-        console.log(tenant);
-        console.log(message);
-        assert(tenant === accounts[1])
+        rentId = parseEventValue(receipt, "sendTenant")
+        console.log("Here should be Number");
+        console.log(rentId);
+        assert(rentId == 0)
         
     })
 

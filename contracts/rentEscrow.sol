@@ -1,8 +1,32 @@
 pragma solidity ^0.8.10;
 
+interface rentEscrowInterface { 
+
+struct rentContract {
+        uint rentId;
+        address tenant;
+        address landlord;
+        uint256 escrowValue;
+        string contractDetail;
+        string status;
+        redeemProposal redeemProposal;
+    }
+
+    struct redeemProposal {
+        uint tenantShare;
+        uint landlordShare;
+        uint feeShare;
+        address feeAddress;
+        uint proposalStatus; /// @dev 100 Proposed 200 Redeemed by tenant 202 Redemed via Dispute Resolution 301 rejected by landlord 302 rejected by tenant
+    }
+
+    function getContractToResolve () external view returns (rentContract memory);
+}
+
 contract rentEscrow{
 
     struct rentContract {
+        uint rentId;
         address tenant;
         address landlord;
         uint256 escrowValue;
@@ -29,12 +53,19 @@ contract rentEscrow{
     event rentContractId (uint _rentId);
     event rentContractId2 (uint _rentId);
 
+    ///@dev this is used by retrieve mapping by another contract
+    ///@custom:later now gives just first contract. Need to add logic to return contract where redeemProposal was rejected
+     function getContractToResolve () external view returns (rentContract memory) {
+         uint _rentId = 1;
+         return rentContractsMapping[_rentId];
+    }
+    
     ///@dev Should go to some utils contract
-
     function updateAddressMapping (uint _rentId) internal {
         addressMapping[msg.sender].push(_rentId);
     }
 
+    ///@notice returns all contracts  where sender is involved party
     function getContractsByAddress () external view returns ( uint[] memory ){
     return addressMapping[msg.sender];
 
@@ -43,6 +74,7 @@ contract rentEscrow{
     function proposeNewContract (uint256 _escrowValue, string memory _contractDetail) external {
         rentContract memory myRentContract;
      
+        myRentContract.rentId = nextRentId;
         myRentContract.landlord = msg.sender;
         myRentContract.escrowValue = _escrowValue;
         myRentContract.contractDetail = _contractDetail;
