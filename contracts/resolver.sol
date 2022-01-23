@@ -3,7 +3,7 @@ import "./rentEscrow.sol";
 
 contract resolver is rentEscrow {
     //event sendTenant (uint _id);
-    //event sendMessage (address _message);
+    event sendMessage (address _message);
 
     address rentEscrowAddress;
 
@@ -30,7 +30,7 @@ contract resolver is rentEscrow {
 
     CaseWaitingForJudge caseWaitingForJudge = CaseWaitingForJudge({waiting: false, disputeId: 0});
 
-    ///@param Number of judges needed for this contract
+    ///@dev Number of judges needed for this contract
     uint numberOfJudges = 3;
     ///@dev update number of judges.
     ///@custom:later should be admin only...
@@ -46,6 +46,7 @@ contract resolver is rentEscrow {
     
     function setRentEscrowAddress (address _rentEscrowAddress) public  {
         rentEscrowAddress = _rentEscrowAddress;
+         emit sendMessage(rentEscrowAddress);
     }
 
     function getNewContractToResolve () public {
@@ -69,19 +70,22 @@ contract resolver is rentEscrow {
         caseWaitingForJudge.disputeId = re.getContractToResolve().rentId;
 
     }
+    /**@custom:later this currently misses couple of requirements. among others:
+    - what if landlord should be judge?)
+    - each judge must be unique id
 
+     **/
     function assignJudge() public {
+       
         if (caseWaitingForJudge.waiting == false) {
             getNewContractToResolve();
         }
 
         DisputeCaseMapping[caseWaitingForJudge.disputeId].judges.push(msg.sender);
 
-        if (DisputeCaseMapping[caseWaitingForJudge.disputeId].judges <= numberOfJudges) {
+        if (DisputeCaseMapping[caseWaitingForJudge.disputeId].judges.length <= numberOfJudges) {
             caseWaitingForJudge.waiting = false;
         }
-
-
     }
 
 }

@@ -189,14 +189,9 @@ contract("rentEscrow", async accounts => {
     // testing resolver
     it("Should return contractId", async () => {
         receipts = await createAndAccept(rEsc,accounts[0],accounts[1], 999, "Bonjour Le Mond")
-        
-        rentId = receipts[0]
-        console.log(rentId)
         receipt = await resolver.getNewContractToResolve()
-        console.log(receipt.logs[0])
         rentId = parseEventValue(receipt, "sendTenant")
-        console.log("Here should be Number");
-        console.log(rentId);
+        
         assert(rentId == 0)
         
     })

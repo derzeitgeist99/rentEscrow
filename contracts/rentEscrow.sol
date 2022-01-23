@@ -51,7 +51,6 @@ contract rentEscrow{
 
     ///@dev in order to give some feedback that rentcontract was created, we will emit its id. Later maybe be filled with some other
     event rentContractId (uint _rentId);
-    event rentContractId2 (uint _rentId);
 
     ///@dev this is used by retrieve mapping by another contract
     ///@custom:later now gives just first contract. Need to add logic to return contract where redeemProposal was rejected
