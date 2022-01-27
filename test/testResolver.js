@@ -21,7 +21,7 @@ contract("rentEscrow", async accounts => {
        
         contractAddress = await rEsc.address
         receipt = await resolver.setRentEscrowAddress(contractAddress)
-        let message = parseEventValue(receipt, "sendMessage")
+        let message = parseEventValue(receipt, "sendAddress")
         console.log(message);
         console.log(await rEsc.address);
 
@@ -43,8 +43,10 @@ contract("rentEscrow", async accounts => {
     it("should create 2 dispute cases", async () => {
         receipt = await resolver.assignJudge()
         console.log(receipt);
-        let disputeCase = await disputeCaseMapping(0)
-        console.log(disputeCase);
+        message = parseEventValue(receipt, "sendId")
+        console.log(toNumber(message));
+        //let disputeCase = await disputeCaseMapping(0)
+        //console.log(disputeCase);
 
 
     })

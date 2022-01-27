@@ -23,25 +23,25 @@ struct rentContract {
     function getContractToResolve () external view returns (rentContract memory);
 }
 
-contract rentEscrow{
+contract rentEscrow is rentEscrowInterface {
 
-    struct rentContract {
-        uint rentId;
-        address tenant;
-        address landlord;
-        uint256 escrowValue;
-        string contractDetail;
-        string status;
-        redeemProposal redeemProposal;
-    }
+    // struct rentContract {
+    //     uint rentId;
+    //     address tenant;
+    //     address landlord;
+    //     uint256 escrowValue;
+    //     string contractDetail;
+    //     string status;
+    //     redeemProposal redeemProposal;
+    // }
 
-    struct redeemProposal {
-        uint tenantShare;
-        uint landlordShare;
-        uint feeShare;
-        address feeAddress;
-        uint proposalStatus; /// @dev 100 Proposed 200 Redeemed by tenant 202 Redemed via Dispute Resolution 301 rejected by landlord 302 rejected by tenant
-    }
+    // struct redeemProposal {
+    //     uint tenantShare;
+    //     uint landlordShare;
+    //     uint feeShare;
+    //     address feeAddress;
+    //     uint proposalStatus; /// @dev 100 Proposed 200 Redeemed by tenant 202 Redemed via Dispute Resolution 301 rejected by landlord 302 rejected by tenant
+    // }
 
     mapping(uint => rentContract) public rentContractsMapping;
 
