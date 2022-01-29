@@ -1,9 +1,15 @@
 const { toBN,toNumber } = web3.utils;
 
-const parseEventValue = (receipt,eventName) => {
+const parseEventValue = (receipt,eventName,print = false) => {
     logs = receipt.receipt.logs
     result = logs.filter(log => log.event=== eventName  )
-    return result[0].args["0"]
+    
+    let parsedResult = []
+    for (i = 0; i< result.length; i++)
+        {parsedResult.push(result[i].args["0"])
+        if (print){console.log("===>  " + result[i].args["0"])}}
+        
+    return parsedResult
 
 };
 

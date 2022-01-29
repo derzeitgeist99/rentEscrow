@@ -2,17 +2,17 @@ pragma solidity ^0.8.10;
 
 interface rentEscrowInterface { 
 
-struct rentContract {
+struct RentContract {
         uint rentId;
         address tenant;
         address landlord;
         uint256 escrowValue;
         string contractDetail;
         string status;
-        redeemProposal redeemProposal;
+        RedeemProposal redeemProposal;
     }
 
-    struct redeemProposal {
+    struct RedeemProposal {
         uint tenantShare;
         uint landlordShare;
         uint feeShare;
@@ -20,12 +20,12 @@ struct rentContract {
         uint proposalStatus; /// @dev 100 Proposed 200 Redeemed by tenant 202 Redemed via Dispute Resolution 301 rejected by landlord 302 rejected by tenant
     }
 
-    function getContractToResolve () external view returns (rentContract memory);
+    function getContractToResolve () external view returns (RentContract memory);
 }
 
 contract rentEscrow is rentEscrowInterface {
 
-    // struct rentContract {
+    // struct RentContract {
     //     uint rentId;
     //     address tenant;
     //     address landlord;
@@ -43,7 +43,7 @@ contract rentEscrow is rentEscrowInterface {
     //     uint proposalStatus; /// @dev 100 Proposed 200 Redeemed by tenant 202 Redemed via Dispute Resolution 301 rejected by landlord 302 rejected by tenant
     // }
 
-    mapping(uint => rentContract) public rentContractsMapping;
+    mapping(uint => RentContract) public rentContractsMapping;
 
     // will use this to search contracts by address
     mapping(address => uint[]) public addressMapping;
@@ -54,7 +54,7 @@ contract rentEscrow is rentEscrowInterface {
 
     ///@dev this is used by retrieve mapping by another contract
     ///@custom:later now gives just first contract. Need to add logic to return contract where redeemProposal was rejected
-     function getContractToResolve () external view returns (rentContract memory) {
+     function getContractToResolve () external view returns (RentContract memory) {
          uint _rentId = 1;
          return rentContractsMapping[_rentId];
     }
@@ -71,7 +71,7 @@ contract rentEscrow is rentEscrowInterface {
     }
 
     function proposeNewContract (uint256 _escrowValue, string memory _contractDetail) external {
-        rentContract memory myRentContract;
+        RentContract memory myRentContract;
      
         myRentContract.rentId = nextRentId;
         myRentContract.landlord = msg.sender;

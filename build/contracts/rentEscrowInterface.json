@@ -65,12 +65,12 @@
                   "type": "uint256"
                 }
               ],
-              "internalType": "struct rentEscrowInterface.redeemProposal",
+              "internalType": "struct rentEscrowInterface.RedeemProposal",
               "name": "redeemProposal",
               "type": "tuple"
             }
           ],
-          "internalType": "struct rentEscrowInterface.rentContract",
+          "internalType": "struct rentEscrowInterface.RentContract",
           "name": "",
           "type": "tuple"
         }
@@ -79,7 +79,7 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.10+commit.fc410830\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"getContractToResolve\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"rentId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"tenant\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"landlord\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"escrowValue\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"contractDetail\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"status\",\"type\":\"string\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"tenantShare\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"landlordShare\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"feeShare\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"feeAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"proposalStatus\",\"type\":\"uint256\"}],\"internalType\":\"struct rentEscrowInterface.redeemProposal\",\"name\":\"redeemProposal\",\"type\":\"tuple\"}],\"internalType\":\"struct rentEscrowInterface.rentContract\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/rentEscrow.sol\":\"rentEscrowInterface\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/rentEscrow.sol\":{\"keccak256\":\"0x48186b2d41ef4e308351e142c2b4cbee70682905aca10e66592af5dfbb132f6a\",\"urls\":[\"bzz-raw://8c1c63ce743e587dd320b0317d6048f5fe5220ee20d4c22bb6265f4c28d5e766\",\"dweb:/ipfs/Qmc3ztJWmK7MLxc6exjojv3h2PFXjqk2w1Kr4EL9uAku2Y\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.10+commit.fc410830\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"getContractToResolve\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"rentId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"tenant\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"landlord\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"escrowValue\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"contractDetail\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"status\",\"type\":\"string\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"tenantShare\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"landlordShare\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"feeShare\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"feeAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"proposalStatus\",\"type\":\"uint256\"}],\"internalType\":\"struct rentEscrowInterface.RedeemProposal\",\"name\":\"redeemProposal\",\"type\":\"tuple\"}],\"internalType\":\"struct rentEscrowInterface.RentContract\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/rentEscrow.sol\":\"rentEscrowInterface\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/rentEscrow.sol\":{\"keccak256\":\"0x4a11dedf9f723021a9caea7486075dca0d6f3063c43a9096bcf14d48635dfee4\",\"urls\":[\"bzz-raw://5a579036653a2cb44c76c9c05169b45de4d41ef2cccee4da0418613e4703682c\",\"dweb:/ipfs/QmcrBt5WxVVjUUWXSn1XG8iihZW1PWao9GNE6ep7qPkZ5M\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
@@ -87,7 +87,7 @@
   "deployedGeneratedSources": [],
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.8.10;\n\ninterface rentEscrowInterface { \n\nstruct rentContract {\n        uint rentId;\n        address tenant;\n        address landlord;\n        uint256 escrowValue;\n        string contractDetail;\n        string status;\n        redeemProposal redeemProposal;\n    }\n\n    struct redeemProposal {\n        uint tenantShare;\n        uint landlordShare;\n        uint feeShare;\n        address feeAddress;\n        uint proposalStatus; /// @dev 100 Proposed 200 Redeemed by tenant 202 Redemed via Dispute Resolution 301 rejected by landlord 302 rejected by tenant\n    }\n\n    function getContractToResolve () external view returns (rentContract memory);\n}\n\ncontract rentEscrow is rentEscrowInterface {\n\n    // struct rentContract {\n    //     uint rentId;\n    //     address tenant;\n    //     address landlord;\n    //     uint256 escrowValue;\n    //     string contractDetail;\n    //     string status;\n    //     redeemProposal redeemProposal;\n    // }\n\n    // struct redeemProposal {\n    //     uint tenantShare;\n    //     uint landlordShare;\n    //     uint feeShare;\n    //     address feeAddress;\n    //     uint proposalStatus; /// @dev 100 Proposed 200 Redeemed by tenant 202 Redemed via Dispute Resolution 301 rejected by landlord 302 rejected by tenant\n    // }\n\n    mapping(uint => rentContract) public rentContractsMapping;\n\n    // will use this to search contracts by address\n    mapping(address => uint[]) public addressMapping;\n    uint public nextRentId = 0;\n\n    ///@dev in order to give some feedback that rentcontract was created, we will emit its id. Later maybe be filled with some other\n    event rentContractId (uint _rentId);\n\n    ///@dev this is used by retrieve mapping by another contract\n    ///@custom:later now gives just first contract. Need to add logic to return contract where redeemProposal was rejected\n     function getContractToResolve () external view returns (rentContract memory) {\n         uint _rentId = 1;\n         return rentContractsMapping[_rentId];\n    }\n    \n    ///@dev Should go to some utils contract\n    function updateAddressMapping (uint _rentId) internal {\n        addressMapping[msg.sender].push(_rentId);\n    }\n\n    ///@notice returns all contracts  where sender is involved party\n    function getContractsByAddress () external view returns ( uint[] memory ){\n    return addressMapping[msg.sender];\n\n    }\n\n    function proposeNewContract (uint256 _escrowValue, string memory _contractDetail) external {\n        rentContract memory myRentContract;\n     \n        myRentContract.rentId = nextRentId;\n        myRentContract.landlord = msg.sender;\n        myRentContract.escrowValue = _escrowValue;\n        myRentContract.contractDetail = _contractDetail;\n        \n        rentContractsMapping[nextRentId] = myRentContract; //Later: Change to nextId to hashed ID\n        updateAddressMapping(nextRentId);\n        emit rentContractId(nextRentId);\n        \n        nextRentId += 1;\n\n    }\n\n    function acceptNewContract (uint _rentId) external payable{\n        require(msg.value == rentContractsMapping[_rentId].escrowValue, \"Eth sent is not same as escrowValue\");\n        \n        rentContractsMapping[_rentId].tenant = msg.sender;\n\n        updateAddressMapping(_rentId);\n\n    }\n\n    function createRedeemProposal (uint _rentId, uint _tenantShare, uint _landlordShare, uint _feeShare, address _feeAddress  ) external {\n        \n        uint shareSum = _tenantShare + _landlordShare + _feeShare;\n        require(shareSum == 100, \"TenantShare + Landlord Share + Fee Share is not 100%\" );\n\n        //only landlord can create redeemProposal\n        // test required\n        require(msg.sender ==  rentContractsMapping[_rentId].landlord, \"Only Landlord can create redeem proposal\");\n\n        rentContractsMapping[_rentId].redeemProposal.tenantShare = _tenantShare;\n        rentContractsMapping[_rentId].redeemProposal.landlordShare = _landlordShare;\n        rentContractsMapping[_rentId].redeemProposal.feeShare = _feeShare;\n        //Later: fee address must be protected\n        rentContractsMapping[_rentId].redeemProposal.feeAddress = _feeAddress;\n        rentContractsMapping[_rentId].redeemProposal.proposalStatus = 100;\n    \n    }\n\n    function acceptRedeemProposal(uint _rentId) external {\n        //only tenant can accept redeemProposal\n        // test required\n        require(msg.sender ==  rentContractsMapping[_rentId].tenant,\"Only tenant can accept redeem proposal\");\n\n        \n        uint escrowValue = rentContractsMapping[_rentId].escrowValue;\n        // send to tenant\n        address payable tenantAddress = payable(rentContractsMapping[_rentId].tenant);\n        uint escrowTenant = escrowValue * rentContractsMapping[_rentId].redeemProposal.tenantShare / 100;\n\n         // send to landlord\n        address payable landlordAddress = payable(rentContractsMapping[_rentId].landlord);\n        uint escrowLandlord = escrowValue * rentContractsMapping[_rentId].redeemProposal.landlordShare / 100;\n\n        // send to fee\n        address payable feeAddress = payable(rentContractsMapping[_rentId].redeemProposal.feeAddress);\n        uint fee = escrowValue * rentContractsMapping[_rentId].redeemProposal.feeShare / 100;\n\n        //values to send must equal to escrowValue\n        require((escrowTenant + escrowLandlord + fee) == escrowValue, \"TenantShare + Landlord Share + Fee Share does not equal Escrow Value\");\n\n        // status must be 100 (proposed), to avoid double dip\n        require(rentContractsMapping[_rentId].redeemProposal.proposalStatus == 100, \"Escrow has been alread redeemed.\");\n        rentContractsMapping[_rentId].redeemProposal.proposalStatus = 200;\n\n        //Later: would it make sense to stop any redemptions in case sum of individual escrows is below total balance ???\n        \n        //Sending\n        tenantAddress.transfer(escrowTenant);\n        landlordAddress.transfer(escrowLandlord);\n        feeAddress.transfer(fee);    \n    }\n\n    ///@notice Use this function to reject redeem proposal. Will send it to the resolution centre\n    ///@param _rentId identifies the contract between tenant and landlord\n\n    function rejectRedeemProposal(uint _rentId) external {\n        ///@dev UX has a say here, currently tenant and landlord can reject at any time\n        require((msg.sender ==  rentContractsMapping[_rentId].tenant || msg.sender == rentContractsMapping[_rentId].landlord), \"Only tenant or landlord can accept redeem proposal\");\n        \n        ///@custom:later probably better to re-write to allowed statuses\n        require(\n            rentContractsMapping[_rentId].redeemProposal.proposalStatus != 301 &&\n            rentContractsMapping[_rentId].redeemProposal.proposalStatus != 302,\"Already rejected\");\n        require(rentContractsMapping[_rentId].redeemProposal.proposalStatus != (200),\"Already accepted\" );\n\n        if(msg.sender == rentContractsMapping[_rentId].landlord) {\n            rentContractsMapping[_rentId].redeemProposal.proposalStatus = 301;\n        }\n        else if (msg.sender == rentContractsMapping[_rentId].tenant){\n             rentContractsMapping[_rentId].redeemProposal.proposalStatus = 302;\n\n        }\n\n    }\n \n\n    function devGetBalance () external view returns(uint){\n        return(address(this).balance);\n    }\n}",
+  "source": "pragma solidity ^0.8.10;\n\ninterface rentEscrowInterface { \n\nstruct RentContract {\n        uint rentId;\n        address tenant;\n        address landlord;\n        uint256 escrowValue;\n        string contractDetail;\n        string status;\n        RedeemProposal redeemProposal;\n    }\n\n    struct RedeemProposal {\n        uint tenantShare;\n        uint landlordShare;\n        uint feeShare;\n        address feeAddress;\n        uint proposalStatus; /// @dev 100 Proposed 200 Redeemed by tenant 202 Redemed via Dispute Resolution 301 rejected by landlord 302 rejected by tenant\n    }\n\n    function getContractToResolve () external view returns (RentContract memory);\n}\n\ncontract rentEscrow is rentEscrowInterface {\n\n    // struct RentContract {\n    //     uint rentId;\n    //     address tenant;\n    //     address landlord;\n    //     uint256 escrowValue;\n    //     string contractDetail;\n    //     string status;\n    //     redeemProposal redeemProposal;\n    // }\n\n    // struct redeemProposal {\n    //     uint tenantShare;\n    //     uint landlordShare;\n    //     uint feeShare;\n    //     address feeAddress;\n    //     uint proposalStatus; /// @dev 100 Proposed 200 Redeemed by tenant 202 Redemed via Dispute Resolution 301 rejected by landlord 302 rejected by tenant\n    // }\n\n    mapping(uint => RentContract) public rentContractsMapping;\n\n    // will use this to search contracts by address\n    mapping(address => uint[]) public addressMapping;\n    uint public nextRentId = 0;\n\n    ///@dev in order to give some feedback that rentcontract was created, we will emit its id. Later maybe be filled with some other\n    event rentContractId (uint _rentId);\n\n    ///@dev this is used by retrieve mapping by another contract\n    ///@custom:later now gives just first contract. Need to add logic to return contract where redeemProposal was rejected\n     function getContractToResolve () external view returns (RentContract memory) {\n         uint _rentId = 1;\n         return rentContractsMapping[_rentId];\n    }\n    \n    ///@dev Should go to some utils contract\n    function updateAddressMapping (uint _rentId) internal {\n        addressMapping[msg.sender].push(_rentId);\n    }\n\n    ///@notice returns all contracts  where sender is involved party\n    function getContractsByAddress () external view returns ( uint[] memory ){\n    return addressMapping[msg.sender];\n\n    }\n\n    function proposeNewContract (uint256 _escrowValue, string memory _contractDetail) external {\n        RentContract memory myRentContract;\n     \n        myRentContract.rentId = nextRentId;\n        myRentContract.landlord = msg.sender;\n        myRentContract.escrowValue = _escrowValue;\n        myRentContract.contractDetail = _contractDetail;\n        \n        rentContractsMapping[nextRentId] = myRentContract; //Later: Change to nextId to hashed ID\n        updateAddressMapping(nextRentId);\n        emit rentContractId(nextRentId);\n        \n        nextRentId += 1;\n\n    }\n\n    function acceptNewContract (uint _rentId) external payable{\n        require(msg.value == rentContractsMapping[_rentId].escrowValue, \"Eth sent is not same as escrowValue\");\n        \n        rentContractsMapping[_rentId].tenant = msg.sender;\n\n        updateAddressMapping(_rentId);\n\n    }\n\n    function createRedeemProposal (uint _rentId, uint _tenantShare, uint _landlordShare, uint _feeShare, address _feeAddress  ) external {\n        \n        uint shareSum = _tenantShare + _landlordShare + _feeShare;\n        require(shareSum == 100, \"TenantShare + Landlord Share + Fee Share is not 100%\" );\n\n        //only landlord can create redeemProposal\n        // test required\n        require(msg.sender ==  rentContractsMapping[_rentId].landlord, \"Only Landlord can create redeem proposal\");\n\n        rentContractsMapping[_rentId].redeemProposal.tenantShare = _tenantShare;\n        rentContractsMapping[_rentId].redeemProposal.landlordShare = _landlordShare;\n        rentContractsMapping[_rentId].redeemProposal.feeShare = _feeShare;\n        //Later: fee address must be protected\n        rentContractsMapping[_rentId].redeemProposal.feeAddress = _feeAddress;\n        rentContractsMapping[_rentId].redeemProposal.proposalStatus = 100;\n    \n    }\n\n    function acceptRedeemProposal(uint _rentId) external {\n        //only tenant can accept redeemProposal\n        // test required\n        require(msg.sender ==  rentContractsMapping[_rentId].tenant,\"Only tenant can accept redeem proposal\");\n\n        \n        uint escrowValue = rentContractsMapping[_rentId].escrowValue;\n        // send to tenant\n        address payable tenantAddress = payable(rentContractsMapping[_rentId].tenant);\n        uint escrowTenant = escrowValue * rentContractsMapping[_rentId].redeemProposal.tenantShare / 100;\n\n         // send to landlord\n        address payable landlordAddress = payable(rentContractsMapping[_rentId].landlord);\n        uint escrowLandlord = escrowValue * rentContractsMapping[_rentId].redeemProposal.landlordShare / 100;\n\n        // send to fee\n        address payable feeAddress = payable(rentContractsMapping[_rentId].redeemProposal.feeAddress);\n        uint fee = escrowValue * rentContractsMapping[_rentId].redeemProposal.feeShare / 100;\n\n        //values to send must equal to escrowValue\n        require((escrowTenant + escrowLandlord + fee) == escrowValue, \"TenantShare + Landlord Share + Fee Share does not equal Escrow Value\");\n\n        // status must be 100 (proposed), to avoid double dip\n        require(rentContractsMapping[_rentId].redeemProposal.proposalStatus == 100, \"Escrow has been alread redeemed.\");\n        rentContractsMapping[_rentId].redeemProposal.proposalStatus = 200;\n\n        //Later: would it make sense to stop any redemptions in case sum of individual escrows is below total balance ???\n        \n        //Sending\n        tenantAddress.transfer(escrowTenant);\n        landlordAddress.transfer(escrowLandlord);\n        feeAddress.transfer(fee);    \n    }\n\n    ///@notice Use this function to reject redeem proposal. Will send it to the resolution centre\n    ///@param _rentId identifies the contract between tenant and landlord\n\n    function rejectRedeemProposal(uint _rentId) external {\n        ///@dev UX has a say here, currently tenant and landlord can reject at any time\n        require((msg.sender ==  rentContractsMapping[_rentId].tenant || msg.sender == rentContractsMapping[_rentId].landlord), \"Only tenant or landlord can accept redeem proposal\");\n        \n        ///@custom:later probably better to re-write to allowed statuses\n        require(\n            rentContractsMapping[_rentId].redeemProposal.proposalStatus != 301 &&\n            rentContractsMapping[_rentId].redeemProposal.proposalStatus != 302,\"Already rejected\");\n        require(rentContractsMapping[_rentId].redeemProposal.proposalStatus != (200),\"Already accepted\" );\n\n        if(msg.sender == rentContractsMapping[_rentId].landlord) {\n            rentContractsMapping[_rentId].redeemProposal.proposalStatus = 301;\n        }\n        else if (msg.sender == rentContractsMapping[_rentId].tenant){\n             rentContractsMapping[_rentId].redeemProposal.proposalStatus = 302;\n\n        }\n\n    }\n \n\n    function devGetBalance () external view returns(uint){\n        return(address(this).balance);\n    }\n}",
   "sourcePath": "/Users/andy/my_repos/rentEscrow/contracts/rentEscrow.sol",
   "ast": {
     "absolutePath": "project:/contracts/rentEscrow.sol",
@@ -129,7 +129,7 @@
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "canonicalName": "rentEscrowInterface.rentContract",
+            "canonicalName": "rentEscrowInterface.RentContract",
             "id": 17,
             "members": [
               {
@@ -308,15 +308,15 @@
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_redeemProposal_$28_storage_ptr",
-                  "typeString": "struct rentEscrowInterface.redeemProposal"
+                  "typeIdentifier": "t_struct$_RedeemProposal_$28_storage_ptr",
+                  "typeString": "struct rentEscrowInterface.RedeemProposal"
                 },
                 "typeName": {
                   "id": 15,
                   "nodeType": "UserDefinedTypeName",
                   "pathNode": {
                     "id": 14,
-                    "name": "redeemProposal",
+                    "name": "RedeemProposal",
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 28,
                     "src": "244:14:0"
@@ -324,14 +324,14 @@
                   "referencedDeclaration": 28,
                   "src": "244:14:0",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_redeemProposal_$28_storage_ptr",
-                    "typeString": "struct rentEscrowInterface.redeemProposal"
+                    "typeIdentifier": "t_struct$_RedeemProposal_$28_storage_ptr",
+                    "typeString": "struct rentEscrowInterface.RedeemProposal"
                   }
                 },
                 "visibility": "internal"
               }
             ],
-            "name": "rentContract",
+            "name": "RentContract",
             "nameLocation": "67:12:0",
             "nodeType": "StructDefinition",
             "scope": 35,
@@ -339,7 +339,7 @@
             "visibility": "public"
           },
           {
-            "canonicalName": "rentEscrowInterface.redeemProposal",
+            "canonicalName": "rentEscrowInterface.RedeemProposal",
             "id": 28,
             "members": [
               {
@@ -479,7 +479,7 @@
                 "visibility": "internal"
               }
             ],
-            "name": "redeemProposal",
+            "name": "RedeemProposal",
             "nameLocation": "293:14:0",
             "nodeType": "StructDefinition",
             "scope": 35,
@@ -517,15 +517,15 @@
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_rentContract_$17_memory_ptr",
-                    "typeString": "struct rentEscrowInterface.rentContract"
+                    "typeIdentifier": "t_struct$_RentContract_$17_memory_ptr",
+                    "typeString": "struct rentEscrowInterface.RentContract"
                   },
                   "typeName": {
                     "id": 31,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
                       "id": 30,
-                      "name": "rentContract",
+                      "name": "RentContract",
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 17,
                       "src": "639:12:0"
@@ -533,8 +533,8 @@
                     "referencedDeclaration": 17,
                     "src": "639:12:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_rentContract_$17_storage_ptr",
-                      "typeString": "struct rentEscrowInterface.rentContract"
+                      "typeIdentifier": "t_struct$_RentContract_$17_storage_ptr",
+                      "typeString": "struct rentEscrowInterface.RentContract"
                     }
                   },
                   "visibility": "internal"
@@ -595,8 +595,8 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract)"
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract)"
             },
             "typeName": {
               "id": 41,
@@ -613,15 +613,15 @@
               "nodeType": "Mapping",
               "src": "1285:29:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract)"
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract)"
               },
               "valueType": {
                 "id": 40,
                 "nodeType": "UserDefinedTypeName",
                 "pathNode": {
                   "id": 39,
-                  "name": "rentContract",
+                  "name": "RentContract",
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 17,
                   "src": "1301:12:0"
@@ -629,8 +629,8 @@
                 "referencedDeclaration": 17,
                 "src": "1301:12:0",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_rentContract_$17_storage_ptr",
-                  "typeString": "struct rentEscrowInterface.rentContract"
+                  "typeIdentifier": "t_struct$_RentContract_$17_storage_ptr",
+                  "typeString": "struct rentEscrowInterface.RentContract"
                 }
               }
             },
@@ -857,8 +857,8 @@
                       "referencedDeclaration": 42,
                       "src": "1974:20:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                        "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                        "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                        "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                       }
                     },
                     "id": 68,
@@ -881,8 +881,8 @@
                     "nodeType": "IndexAccess",
                     "src": "1974:29:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                      "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                      "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                      "typeString": "struct rentEscrowInterface.RentContract storage ref"
                     }
                   },
                   "functionReturnParameters": 61,
@@ -928,15 +928,15 @@
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_rentContract_$17_memory_ptr",
-                    "typeString": "struct rentEscrowInterface.rentContract"
+                    "typeIdentifier": "t_struct$_RentContract_$17_memory_ptr",
+                    "typeString": "struct rentEscrowInterface.RentContract"
                   },
                   "typeName": {
                     "id": 59,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
                       "id": 58,
-                      "name": "rentContract",
+                      "name": "RentContract",
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 17,
                       "src": "1908:12:0"
@@ -944,8 +944,8 @@
                     "referencedDeclaration": 17,
                     "src": "1908:12:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_rentContract_$17_storage_ptr",
-                      "typeString": "struct rentEscrowInterface.rentContract"
+                      "typeIdentifier": "t_struct$_RentContract_$17_storage_ptr",
+                      "typeString": "struct rentEscrowInterface.RentContract"
                     }
                   },
                   "visibility": "internal"
@@ -1289,15 +1289,15 @@
                       "stateVariable": false,
                       "storageLocation": "memory",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_rentContract_$17_memory_ptr",
-                        "typeString": "struct rentEscrowInterface.rentContract"
+                        "typeIdentifier": "t_struct$_RentContract_$17_memory_ptr",
+                        "typeString": "struct rentEscrowInterface.RentContract"
                       },
                       "typeName": {
                         "id": 107,
                         "nodeType": "UserDefinedTypeName",
                         "pathNode": {
                           "id": 106,
-                          "name": "rentContract",
+                          "name": "RentContract",
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 17,
                           "src": "2478:12:0"
@@ -1305,8 +1305,8 @@
                         "referencedDeclaration": 17,
                         "src": "2478:12:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_rentContract_$17_storage_ptr",
-                          "typeString": "struct rentEscrowInterface.rentContract"
+                          "typeIdentifier": "t_struct$_RentContract_$17_storage_ptr",
+                          "typeString": "struct rentEscrowInterface.RentContract"
                         }
                       },
                       "visibility": "internal"
@@ -1332,8 +1332,8 @@
                         "referencedDeclaration": 108,
                         "src": "2528:14:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_rentContract_$17_memory_ptr",
-                          "typeString": "struct rentEscrowInterface.rentContract memory"
+                          "typeIdentifier": "t_struct$_RentContract_$17_memory_ptr",
+                          "typeString": "struct rentEscrowInterface.RentContract memory"
                         }
                       },
                       "id": 112,
@@ -1390,8 +1390,8 @@
                         "referencedDeclaration": 108,
                         "src": "2572:14:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_rentContract_$17_memory_ptr",
-                          "typeString": "struct rentEscrowInterface.rentContract memory"
+                          "typeIdentifier": "t_struct$_RentContract_$17_memory_ptr",
+                          "typeString": "struct rentEscrowInterface.RentContract memory"
                         }
                       },
                       "id": 118,
@@ -1462,8 +1462,8 @@
                         "referencedDeclaration": 108,
                         "src": "2618:14:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_rentContract_$17_memory_ptr",
-                          "typeString": "struct rentEscrowInterface.rentContract memory"
+                          "typeIdentifier": "t_struct$_RentContract_$17_memory_ptr",
+                          "typeString": "struct rentEscrowInterface.RentContract memory"
                         }
                       },
                       "id": 125,
@@ -1520,8 +1520,8 @@
                         "referencedDeclaration": 108,
                         "src": "2669:14:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_rentContract_$17_memory_ptr",
-                          "typeString": "struct rentEscrowInterface.rentContract memory"
+                          "typeIdentifier": "t_struct$_RentContract_$17_memory_ptr",
+                          "typeString": "struct rentEscrowInterface.RentContract memory"
                         }
                       },
                       "id": 131,
@@ -1578,8 +1578,8 @@
                         "referencedDeclaration": 42,
                         "src": "2735:20:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                          "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                          "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                         }
                       },
                       "id": 137,
@@ -1602,8 +1602,8 @@
                       "nodeType": "IndexAccess",
                       "src": "2735:32:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                        "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                        "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                        "typeString": "struct rentEscrowInterface.RentContract storage ref"
                       }
                     },
                     "nodeType": "Assignment",
@@ -1616,14 +1616,14 @@
                       "referencedDeclaration": 108,
                       "src": "2770:14:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_rentContract_$17_memory_ptr",
-                        "typeString": "struct rentEscrowInterface.rentContract memory"
+                        "typeIdentifier": "t_struct$_RentContract_$17_memory_ptr",
+                        "typeString": "struct rentEscrowInterface.RentContract memory"
                       }
                     },
                     "src": "2735:49:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                      "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                      "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                      "typeString": "struct rentEscrowInterface.RentContract storage ref"
                     }
                   },
                   "id": 140,
@@ -1923,8 +1923,8 @@
                               "referencedDeclaration": 42,
                               "src": "3043:20:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                               }
                             },
                             "id": 164,
@@ -1947,8 +1947,8 @@
                             "nodeType": "IndexAccess",
                             "src": "3043:29:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                              "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                              "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                              "typeString": "struct rentEscrowInterface.RentContract storage ref"
                             }
                           },
                           "id": 165,
@@ -2049,8 +2049,8 @@
                           "referencedDeclaration": 42,
                           "src": "3143:20:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                            "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                            "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                            "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                           }
                         },
                         "id": 172,
@@ -2073,8 +2073,8 @@
                         "nodeType": "IndexAccess",
                         "src": "3143:29:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                          "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                          "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                          "typeString": "struct rentEscrowInterface.RentContract storage ref"
                         }
                       },
                       "id": 173,
@@ -2514,8 +2514,8 @@
                               "referencedDeclaration": 42,
                               "src": "3655:20:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                               }
                             },
                             "id": 216,
@@ -2538,8 +2538,8 @@
                             "nodeType": "IndexAccess",
                             "src": "3655:29:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                              "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                              "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                              "typeString": "struct rentEscrowInterface.RentContract storage ref"
                             }
                           },
                           "id": 217,
@@ -2641,8 +2641,8 @@
                             "referencedDeclaration": 42,
                             "src": "3749:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 224,
@@ -2665,8 +2665,8 @@
                           "nodeType": "IndexAccess",
                           "src": "3749:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 225,
@@ -2679,8 +2679,8 @@
                         "referencedDeclaration": 16,
                         "src": "3749:44:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                          "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                          "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                          "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                         }
                       },
                       "id": 226,
@@ -2739,8 +2739,8 @@
                             "referencedDeclaration": 42,
                             "src": "3830:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 232,
@@ -2763,8 +2763,8 @@
                           "nodeType": "IndexAccess",
                           "src": "3830:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 233,
@@ -2777,8 +2777,8 @@
                         "referencedDeclaration": 16,
                         "src": "3830:44:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                          "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                          "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                          "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                         }
                       },
                       "id": 234,
@@ -2837,8 +2837,8 @@
                             "referencedDeclaration": 42,
                             "src": "3915:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 240,
@@ -2861,8 +2861,8 @@
                           "nodeType": "IndexAccess",
                           "src": "3915:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 241,
@@ -2875,8 +2875,8 @@
                         "referencedDeclaration": 16,
                         "src": "3915:44:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                          "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                          "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                          "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                         }
                       },
                       "id": 242,
@@ -2935,8 +2935,8 @@
                             "referencedDeclaration": 42,
                             "src": "4037:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 248,
@@ -2959,8 +2959,8 @@
                           "nodeType": "IndexAccess",
                           "src": "4037:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 249,
@@ -2973,8 +2973,8 @@
                         "referencedDeclaration": 16,
                         "src": "4037:44:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                          "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                          "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                          "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                         }
                       },
                       "id": 250,
@@ -3033,8 +3033,8 @@
                             "referencedDeclaration": 42,
                             "src": "4116:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 256,
@@ -3057,8 +3057,8 @@
                           "nodeType": "IndexAccess",
                           "src": "4116:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 257,
@@ -3071,8 +3071,8 @@
                         "referencedDeclaration": 16,
                         "src": "4116:44:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                          "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                          "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                          "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                         }
                       },
                       "id": 258,
@@ -3339,8 +3339,8 @@
                               "referencedDeclaration": 42,
                               "src": "4358:20:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                               }
                             },
                             "id": 273,
@@ -3363,8 +3363,8 @@
                             "nodeType": "IndexAccess",
                             "src": "4358:29:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                              "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                              "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                              "typeString": "struct rentEscrowInterface.RentContract storage ref"
                             }
                           },
                           "id": 274,
@@ -3492,8 +3492,8 @@
                         "referencedDeclaration": 42,
                         "src": "4475:20:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                          "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                          "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                         }
                       },
                       "id": 283,
@@ -3516,8 +3516,8 @@
                       "nodeType": "IndexAccess",
                       "src": "4475:29:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                        "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                        "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                        "typeString": "struct rentEscrowInterface.RentContract storage ref"
                       }
                     },
                     "id": 284,
@@ -3584,8 +3584,8 @@
                             "referencedDeclaration": 42,
                             "src": "4592:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 292,
@@ -3608,8 +3608,8 @@
                           "nodeType": "IndexAccess",
                           "src": "4592:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 293,
@@ -3751,8 +3751,8 @@
                               "referencedDeclaration": 42,
                               "src": "4673:20:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                               }
                             },
                             "id": 301,
@@ -3775,8 +3775,8 @@
                             "nodeType": "IndexAccess",
                             "src": "4673:29:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                              "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                              "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                              "typeString": "struct rentEscrowInterface.RentContract storage ref"
                             }
                           },
                           "id": 302,
@@ -3789,8 +3789,8 @@
                           "referencedDeclaration": 16,
                           "src": "4673:44:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                            "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                            "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                            "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                           }
                         },
                         "id": 303,
@@ -3887,8 +3887,8 @@
                             "referencedDeclaration": 42,
                             "src": "4817:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 314,
@@ -3911,8 +3911,8 @@
                           "nodeType": "IndexAccess",
                           "src": "4817:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 315,
@@ -4054,8 +4054,8 @@
                               "referencedDeclaration": 42,
                               "src": "4902:20:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                               }
                             },
                             "id": 323,
@@ -4078,8 +4078,8 @@
                             "nodeType": "IndexAccess",
                             "src": "4902:29:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                              "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                              "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                              "typeString": "struct rentEscrowInterface.RentContract storage ref"
                             }
                           },
                           "id": 324,
@@ -4092,8 +4092,8 @@
                           "referencedDeclaration": 16,
                           "src": "4902:44:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                            "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                            "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                            "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                           }
                         },
                         "id": 325,
@@ -4191,8 +4191,8 @@
                               "referencedDeclaration": 42,
                               "src": "5037:20:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                               }
                             },
                             "id": 336,
@@ -4215,8 +4215,8 @@
                             "nodeType": "IndexAccess",
                             "src": "5037:29:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                              "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                              "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                              "typeString": "struct rentEscrowInterface.RentContract storage ref"
                             }
                           },
                           "id": 337,
@@ -4229,8 +4229,8 @@
                           "referencedDeclaration": 16,
                           "src": "5037:44:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                            "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                            "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                            "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                           }
                         },
                         "id": 338,
@@ -4372,8 +4372,8 @@
                               "referencedDeclaration": 42,
                               "src": "5128:20:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                               }
                             },
                             "id": 346,
@@ -4396,8 +4396,8 @@
                             "nodeType": "IndexAccess",
                             "src": "5128:29:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                              "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                              "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                              "typeString": "struct rentEscrowInterface.RentContract storage ref"
                             }
                           },
                           "id": 347,
@@ -4410,8 +4410,8 @@
                           "referencedDeclaration": 16,
                           "src": "5128:44:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                            "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                            "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                            "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                           }
                         },
                         "id": 348,
@@ -4667,8 +4667,8 @@
                                 "referencedDeclaration": 42,
                                 "src": "5463:20:0",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                  "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                  "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                  "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                                 }
                               },
                               "id": 368,
@@ -4691,8 +4691,8 @@
                               "nodeType": "IndexAccess",
                               "src": "5463:29:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                                "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                                "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                                "typeString": "struct rentEscrowInterface.RentContract storage ref"
                               }
                             },
                             "id": 369,
@@ -4705,8 +4705,8 @@
                             "referencedDeclaration": 16,
                             "src": "5463:44:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                              "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                              "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                              "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                             }
                           },
                           "id": 370,
@@ -4826,8 +4826,8 @@
                             "referencedDeclaration": 42,
                             "src": "5576:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 378,
@@ -4850,8 +4850,8 @@
                           "nodeType": "IndexAccess",
                           "src": "5576:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 379,
@@ -4864,8 +4864,8 @@
                         "referencedDeclaration": 16,
                         "src": "5576:44:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                          "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                          "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                          "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                         }
                       },
                       "id": 380,
@@ -5237,8 +5237,8 @@
                                     "referencedDeclaration": 42,
                                     "src": "6286:20:0",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                      "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                      "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                      "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                                     }
                                   },
                                   "id": 414,
@@ -5261,8 +5261,8 @@
                                   "nodeType": "IndexAccess",
                                   "src": "6286:29:0",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                                    "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                                    "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                                    "typeString": "struct rentEscrowInterface.RentContract storage ref"
                                   }
                                 },
                                 "id": 415,
@@ -5335,8 +5335,8 @@
                                     "referencedDeclaration": 42,
                                     "src": "6340:20:0",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                      "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                      "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                      "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                                     }
                                   },
                                   "id": 421,
@@ -5359,8 +5359,8 @@
                                   "nodeType": "IndexAccess",
                                   "src": "6340:29:0",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                                    "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                                    "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                                    "typeString": "struct rentEscrowInterface.RentContract storage ref"
                                   }
                                 },
                                 "id": 422,
@@ -5499,8 +5499,8 @@
                                   "referencedDeclaration": 42,
                                   "src": "6547:20:0",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                    "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                    "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                                   }
                                 },
                                 "id": 432,
@@ -5523,8 +5523,8 @@
                                 "nodeType": "IndexAccess",
                                 "src": "6547:29:0",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                                  "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                                  "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                                  "typeString": "struct rentEscrowInterface.RentContract storage ref"
                                 }
                               },
                               "id": 433,
@@ -5537,8 +5537,8 @@
                               "referencedDeclaration": 16,
                               "src": "6547:44:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                                "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                                "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                                "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                               }
                             },
                             "id": 434,
@@ -5602,8 +5602,8 @@
                                   "referencedDeclaration": 42,
                                   "src": "6629:20:0",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                    "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                    "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                                   }
                                 },
                                 "id": 439,
@@ -5626,8 +5626,8 @@
                                 "nodeType": "IndexAccess",
                                 "src": "6629:29:0",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                                  "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                                  "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                                  "typeString": "struct rentEscrowInterface.RentContract storage ref"
                                 }
                               },
                               "id": 440,
@@ -5640,8 +5640,8 @@
                               "referencedDeclaration": 16,
                               "src": "6629:44:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                                "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                                "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                                "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                               }
                             },
                             "id": 441,
@@ -5773,8 +5773,8 @@
                                 "referencedDeclaration": 42,
                                 "src": "6733:20:0",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                  "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                  "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                  "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                                 }
                               },
                               "id": 451,
@@ -5797,8 +5797,8 @@
                               "nodeType": "IndexAccess",
                               "src": "6733:29:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                                "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                                "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                                "typeString": "struct rentEscrowInterface.RentContract storage ref"
                               }
                             },
                             "id": 452,
@@ -5811,8 +5811,8 @@
                             "referencedDeclaration": 16,
                             "src": "6733:44:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                              "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                              "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                              "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                             }
                           },
                           "id": 453,
@@ -5979,8 +5979,8 @@
                           "referencedDeclaration": 42,
                           "src": "6850:20:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                            "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                            "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                            "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                           }
                         },
                         "id": 464,
@@ -6003,8 +6003,8 @@
                         "nodeType": "IndexAccess",
                         "src": "6850:29:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                          "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                          "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                          "typeString": "struct rentEscrowInterface.RentContract storage ref"
                         }
                       },
                       "id": 465,
@@ -6076,8 +6076,8 @@
                             "referencedDeclaration": 42,
                             "src": "7012:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 480,
@@ -6100,8 +6100,8 @@
                           "nodeType": "IndexAccess",
                           "src": "7012:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 481,
@@ -6150,8 +6150,8 @@
                                     "referencedDeclaration": 42,
                                     "src": "7064:20:0",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                      "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                      "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                      "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                                     }
                                   },
                                   "id": 485,
@@ -6174,8 +6174,8 @@
                                   "nodeType": "IndexAccess",
                                   "src": "7064:29:0",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                                    "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                                    "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                                    "typeString": "struct rentEscrowInterface.RentContract storage ref"
                                   }
                                 },
                                 "id": 486,
@@ -6188,8 +6188,8 @@
                                 "referencedDeclaration": 16,
                                 "src": "7064:44:0",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                                  "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                                  "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                                  "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                                 }
                               },
                               "id": 487,
@@ -6263,8 +6263,8 @@
                                   "referencedDeclaration": 42,
                                   "src": "6904:20:0",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                    "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                    "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                                   }
                                 },
                                 "id": 469,
@@ -6287,8 +6287,8 @@
                                 "nodeType": "IndexAccess",
                                 "src": "6904:29:0",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                                  "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                                  "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                                  "typeString": "struct rentEscrowInterface.RentContract storage ref"
                                 }
                               },
                               "id": 470,
@@ -6301,8 +6301,8 @@
                               "referencedDeclaration": 16,
                               "src": "6904:44:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                                "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                                "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                                "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                               }
                             },
                             "id": 471,
@@ -6614,7 +6614,7 @@
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "canonicalName": "rentEscrowInterface.rentContract",
+            "canonicalName": "rentEscrowInterface.RentContract",
             "id": 17,
             "members": [
               {
@@ -6793,15 +6793,15 @@
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_redeemProposal_$28_storage_ptr",
-                  "typeString": "struct rentEscrowInterface.redeemProposal"
+                  "typeIdentifier": "t_struct$_RedeemProposal_$28_storage_ptr",
+                  "typeString": "struct rentEscrowInterface.RedeemProposal"
                 },
                 "typeName": {
                   "id": 15,
                   "nodeType": "UserDefinedTypeName",
                   "pathNode": {
                     "id": 14,
-                    "name": "redeemProposal",
+                    "name": "RedeemProposal",
                     "nodeType": "IdentifierPath",
                     "referencedDeclaration": 28,
                     "src": "244:14:0"
@@ -6809,14 +6809,14 @@
                   "referencedDeclaration": 28,
                   "src": "244:14:0",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_redeemProposal_$28_storage_ptr",
-                    "typeString": "struct rentEscrowInterface.redeemProposal"
+                    "typeIdentifier": "t_struct$_RedeemProposal_$28_storage_ptr",
+                    "typeString": "struct rentEscrowInterface.RedeemProposal"
                   }
                 },
                 "visibility": "internal"
               }
             ],
-            "name": "rentContract",
+            "name": "RentContract",
             "nameLocation": "67:12:0",
             "nodeType": "StructDefinition",
             "scope": 35,
@@ -6824,7 +6824,7 @@
             "visibility": "public"
           },
           {
-            "canonicalName": "rentEscrowInterface.redeemProposal",
+            "canonicalName": "rentEscrowInterface.RedeemProposal",
             "id": 28,
             "members": [
               {
@@ -6964,7 +6964,7 @@
                 "visibility": "internal"
               }
             ],
-            "name": "redeemProposal",
+            "name": "RedeemProposal",
             "nameLocation": "293:14:0",
             "nodeType": "StructDefinition",
             "scope": 35,
@@ -7002,15 +7002,15 @@
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_rentContract_$17_memory_ptr",
-                    "typeString": "struct rentEscrowInterface.rentContract"
+                    "typeIdentifier": "t_struct$_RentContract_$17_memory_ptr",
+                    "typeString": "struct rentEscrowInterface.RentContract"
                   },
                   "typeName": {
                     "id": 31,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
                       "id": 30,
-                      "name": "rentContract",
+                      "name": "RentContract",
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 17,
                       "src": "639:12:0"
@@ -7018,8 +7018,8 @@
                     "referencedDeclaration": 17,
                     "src": "639:12:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_rentContract_$17_storage_ptr",
-                      "typeString": "struct rentEscrowInterface.rentContract"
+                      "typeIdentifier": "t_struct$_RentContract_$17_storage_ptr",
+                      "typeString": "struct rentEscrowInterface.RentContract"
                     }
                   },
                   "visibility": "internal"
@@ -7080,8 +7080,8 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract)"
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract)"
             },
             "typeName": {
               "id": 41,
@@ -7098,15 +7098,15 @@
               "nodeType": "Mapping",
               "src": "1285:29:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract)"
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract)"
               },
               "valueType": {
                 "id": 40,
                 "nodeType": "UserDefinedTypeName",
                 "pathNode": {
                   "id": 39,
-                  "name": "rentContract",
+                  "name": "RentContract",
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 17,
                   "src": "1301:12:0"
@@ -7114,8 +7114,8 @@
                 "referencedDeclaration": 17,
                 "src": "1301:12:0",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_struct$_rentContract_$17_storage_ptr",
-                  "typeString": "struct rentEscrowInterface.rentContract"
+                  "typeIdentifier": "t_struct$_RentContract_$17_storage_ptr",
+                  "typeString": "struct rentEscrowInterface.RentContract"
                 }
               }
             },
@@ -7342,8 +7342,8 @@
                       "referencedDeclaration": 42,
                       "src": "1974:20:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                        "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                        "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                        "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                       }
                     },
                     "id": 68,
@@ -7366,8 +7366,8 @@
                     "nodeType": "IndexAccess",
                     "src": "1974:29:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                      "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                      "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                      "typeString": "struct rentEscrowInterface.RentContract storage ref"
                     }
                   },
                   "functionReturnParameters": 61,
@@ -7413,15 +7413,15 @@
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_rentContract_$17_memory_ptr",
-                    "typeString": "struct rentEscrowInterface.rentContract"
+                    "typeIdentifier": "t_struct$_RentContract_$17_memory_ptr",
+                    "typeString": "struct rentEscrowInterface.RentContract"
                   },
                   "typeName": {
                     "id": 59,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
                       "id": 58,
-                      "name": "rentContract",
+                      "name": "RentContract",
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 17,
                       "src": "1908:12:0"
@@ -7429,8 +7429,8 @@
                     "referencedDeclaration": 17,
                     "src": "1908:12:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_rentContract_$17_storage_ptr",
-                      "typeString": "struct rentEscrowInterface.rentContract"
+                      "typeIdentifier": "t_struct$_RentContract_$17_storage_ptr",
+                      "typeString": "struct rentEscrowInterface.RentContract"
                     }
                   },
                   "visibility": "internal"
@@ -7774,15 +7774,15 @@
                       "stateVariable": false,
                       "storageLocation": "memory",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_rentContract_$17_memory_ptr",
-                        "typeString": "struct rentEscrowInterface.rentContract"
+                        "typeIdentifier": "t_struct$_RentContract_$17_memory_ptr",
+                        "typeString": "struct rentEscrowInterface.RentContract"
                       },
                       "typeName": {
                         "id": 107,
                         "nodeType": "UserDefinedTypeName",
                         "pathNode": {
                           "id": 106,
-                          "name": "rentContract",
+                          "name": "RentContract",
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 17,
                           "src": "2478:12:0"
@@ -7790,8 +7790,8 @@
                         "referencedDeclaration": 17,
                         "src": "2478:12:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_rentContract_$17_storage_ptr",
-                          "typeString": "struct rentEscrowInterface.rentContract"
+                          "typeIdentifier": "t_struct$_RentContract_$17_storage_ptr",
+                          "typeString": "struct rentEscrowInterface.RentContract"
                         }
                       },
                       "visibility": "internal"
@@ -7817,8 +7817,8 @@
                         "referencedDeclaration": 108,
                         "src": "2528:14:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_rentContract_$17_memory_ptr",
-                          "typeString": "struct rentEscrowInterface.rentContract memory"
+                          "typeIdentifier": "t_struct$_RentContract_$17_memory_ptr",
+                          "typeString": "struct rentEscrowInterface.RentContract memory"
                         }
                       },
                       "id": 112,
@@ -7875,8 +7875,8 @@
                         "referencedDeclaration": 108,
                         "src": "2572:14:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_rentContract_$17_memory_ptr",
-                          "typeString": "struct rentEscrowInterface.rentContract memory"
+                          "typeIdentifier": "t_struct$_RentContract_$17_memory_ptr",
+                          "typeString": "struct rentEscrowInterface.RentContract memory"
                         }
                       },
                       "id": 118,
@@ -7947,8 +7947,8 @@
                         "referencedDeclaration": 108,
                         "src": "2618:14:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_rentContract_$17_memory_ptr",
-                          "typeString": "struct rentEscrowInterface.rentContract memory"
+                          "typeIdentifier": "t_struct$_RentContract_$17_memory_ptr",
+                          "typeString": "struct rentEscrowInterface.RentContract memory"
                         }
                       },
                       "id": 125,
@@ -8005,8 +8005,8 @@
                         "referencedDeclaration": 108,
                         "src": "2669:14:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_rentContract_$17_memory_ptr",
-                          "typeString": "struct rentEscrowInterface.rentContract memory"
+                          "typeIdentifier": "t_struct$_RentContract_$17_memory_ptr",
+                          "typeString": "struct rentEscrowInterface.RentContract memory"
                         }
                       },
                       "id": 131,
@@ -8063,8 +8063,8 @@
                         "referencedDeclaration": 42,
                         "src": "2735:20:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                          "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                          "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                         }
                       },
                       "id": 137,
@@ -8087,8 +8087,8 @@
                       "nodeType": "IndexAccess",
                       "src": "2735:32:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                        "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                        "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                        "typeString": "struct rentEscrowInterface.RentContract storage ref"
                       }
                     },
                     "nodeType": "Assignment",
@@ -8101,14 +8101,14 @@
                       "referencedDeclaration": 108,
                       "src": "2770:14:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_rentContract_$17_memory_ptr",
-                        "typeString": "struct rentEscrowInterface.rentContract memory"
+                        "typeIdentifier": "t_struct$_RentContract_$17_memory_ptr",
+                        "typeString": "struct rentEscrowInterface.RentContract memory"
                       }
                     },
                     "src": "2735:49:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                      "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                      "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                      "typeString": "struct rentEscrowInterface.RentContract storage ref"
                     }
                   },
                   "id": 140,
@@ -8408,8 +8408,8 @@
                               "referencedDeclaration": 42,
                               "src": "3043:20:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                               }
                             },
                             "id": 164,
@@ -8432,8 +8432,8 @@
                             "nodeType": "IndexAccess",
                             "src": "3043:29:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                              "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                              "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                              "typeString": "struct rentEscrowInterface.RentContract storage ref"
                             }
                           },
                           "id": 165,
@@ -8534,8 +8534,8 @@
                           "referencedDeclaration": 42,
                           "src": "3143:20:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                            "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                            "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                            "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                           }
                         },
                         "id": 172,
@@ -8558,8 +8558,8 @@
                         "nodeType": "IndexAccess",
                         "src": "3143:29:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                          "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                          "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                          "typeString": "struct rentEscrowInterface.RentContract storage ref"
                         }
                       },
                       "id": 173,
@@ -8999,8 +8999,8 @@
                               "referencedDeclaration": 42,
                               "src": "3655:20:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                               }
                             },
                             "id": 216,
@@ -9023,8 +9023,8 @@
                             "nodeType": "IndexAccess",
                             "src": "3655:29:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                              "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                              "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                              "typeString": "struct rentEscrowInterface.RentContract storage ref"
                             }
                           },
                           "id": 217,
@@ -9126,8 +9126,8 @@
                             "referencedDeclaration": 42,
                             "src": "3749:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 224,
@@ -9150,8 +9150,8 @@
                           "nodeType": "IndexAccess",
                           "src": "3749:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 225,
@@ -9164,8 +9164,8 @@
                         "referencedDeclaration": 16,
                         "src": "3749:44:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                          "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                          "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                          "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                         }
                       },
                       "id": 226,
@@ -9224,8 +9224,8 @@
                             "referencedDeclaration": 42,
                             "src": "3830:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 232,
@@ -9248,8 +9248,8 @@
                           "nodeType": "IndexAccess",
                           "src": "3830:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 233,
@@ -9262,8 +9262,8 @@
                         "referencedDeclaration": 16,
                         "src": "3830:44:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                          "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                          "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                          "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                         }
                       },
                       "id": 234,
@@ -9322,8 +9322,8 @@
                             "referencedDeclaration": 42,
                             "src": "3915:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 240,
@@ -9346,8 +9346,8 @@
                           "nodeType": "IndexAccess",
                           "src": "3915:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 241,
@@ -9360,8 +9360,8 @@
                         "referencedDeclaration": 16,
                         "src": "3915:44:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                          "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                          "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                          "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                         }
                       },
                       "id": 242,
@@ -9420,8 +9420,8 @@
                             "referencedDeclaration": 42,
                             "src": "4037:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 248,
@@ -9444,8 +9444,8 @@
                           "nodeType": "IndexAccess",
                           "src": "4037:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 249,
@@ -9458,8 +9458,8 @@
                         "referencedDeclaration": 16,
                         "src": "4037:44:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                          "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                          "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                          "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                         }
                       },
                       "id": 250,
@@ -9518,8 +9518,8 @@
                             "referencedDeclaration": 42,
                             "src": "4116:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 256,
@@ -9542,8 +9542,8 @@
                           "nodeType": "IndexAccess",
                           "src": "4116:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 257,
@@ -9556,8 +9556,8 @@
                         "referencedDeclaration": 16,
                         "src": "4116:44:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                          "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                          "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                          "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                         }
                       },
                       "id": 258,
@@ -9824,8 +9824,8 @@
                               "referencedDeclaration": 42,
                               "src": "4358:20:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                               }
                             },
                             "id": 273,
@@ -9848,8 +9848,8 @@
                             "nodeType": "IndexAccess",
                             "src": "4358:29:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                              "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                              "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                              "typeString": "struct rentEscrowInterface.RentContract storage ref"
                             }
                           },
                           "id": 274,
@@ -9977,8 +9977,8 @@
                         "referencedDeclaration": 42,
                         "src": "4475:20:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                          "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                          "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                         }
                       },
                       "id": 283,
@@ -10001,8 +10001,8 @@
                       "nodeType": "IndexAccess",
                       "src": "4475:29:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                        "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                        "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                        "typeString": "struct rentEscrowInterface.RentContract storage ref"
                       }
                     },
                     "id": 284,
@@ -10069,8 +10069,8 @@
                             "referencedDeclaration": 42,
                             "src": "4592:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 292,
@@ -10093,8 +10093,8 @@
                           "nodeType": "IndexAccess",
                           "src": "4592:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 293,
@@ -10236,8 +10236,8 @@
                               "referencedDeclaration": 42,
                               "src": "4673:20:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                               }
                             },
                             "id": 301,
@@ -10260,8 +10260,8 @@
                             "nodeType": "IndexAccess",
                             "src": "4673:29:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                              "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                              "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                              "typeString": "struct rentEscrowInterface.RentContract storage ref"
                             }
                           },
                           "id": 302,
@@ -10274,8 +10274,8 @@
                           "referencedDeclaration": 16,
                           "src": "4673:44:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                            "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                            "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                            "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                           }
                         },
                         "id": 303,
@@ -10372,8 +10372,8 @@
                             "referencedDeclaration": 42,
                             "src": "4817:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 314,
@@ -10396,8 +10396,8 @@
                           "nodeType": "IndexAccess",
                           "src": "4817:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 315,
@@ -10539,8 +10539,8 @@
                               "referencedDeclaration": 42,
                               "src": "4902:20:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                               }
                             },
                             "id": 323,
@@ -10563,8 +10563,8 @@
                             "nodeType": "IndexAccess",
                             "src": "4902:29:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                              "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                              "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                              "typeString": "struct rentEscrowInterface.RentContract storage ref"
                             }
                           },
                           "id": 324,
@@ -10577,8 +10577,8 @@
                           "referencedDeclaration": 16,
                           "src": "4902:44:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                            "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                            "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                            "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                           }
                         },
                         "id": 325,
@@ -10676,8 +10676,8 @@
                               "referencedDeclaration": 42,
                               "src": "5037:20:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                               }
                             },
                             "id": 336,
@@ -10700,8 +10700,8 @@
                             "nodeType": "IndexAccess",
                             "src": "5037:29:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                              "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                              "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                              "typeString": "struct rentEscrowInterface.RentContract storage ref"
                             }
                           },
                           "id": 337,
@@ -10714,8 +10714,8 @@
                           "referencedDeclaration": 16,
                           "src": "5037:44:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                            "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                            "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                            "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                           }
                         },
                         "id": 338,
@@ -10857,8 +10857,8 @@
                               "referencedDeclaration": 42,
                               "src": "5128:20:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                               }
                             },
                             "id": 346,
@@ -10881,8 +10881,8 @@
                             "nodeType": "IndexAccess",
                             "src": "5128:29:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                              "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                              "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                              "typeString": "struct rentEscrowInterface.RentContract storage ref"
                             }
                           },
                           "id": 347,
@@ -10895,8 +10895,8 @@
                           "referencedDeclaration": 16,
                           "src": "5128:44:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                            "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                            "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                            "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                           }
                         },
                         "id": 348,
@@ -11152,8 +11152,8 @@
                                 "referencedDeclaration": 42,
                                 "src": "5463:20:0",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                  "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                  "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                  "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                                 }
                               },
                               "id": 368,
@@ -11176,8 +11176,8 @@
                               "nodeType": "IndexAccess",
                               "src": "5463:29:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                                "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                                "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                                "typeString": "struct rentEscrowInterface.RentContract storage ref"
                               }
                             },
                             "id": 369,
@@ -11190,8 +11190,8 @@
                             "referencedDeclaration": 16,
                             "src": "5463:44:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                              "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                              "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                              "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                             }
                           },
                           "id": 370,
@@ -11311,8 +11311,8 @@
                             "referencedDeclaration": 42,
                             "src": "5576:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 378,
@@ -11335,8 +11335,8 @@
                           "nodeType": "IndexAccess",
                           "src": "5576:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 379,
@@ -11349,8 +11349,8 @@
                         "referencedDeclaration": 16,
                         "src": "5576:44:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                          "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                          "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                          "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                         }
                       },
                       "id": 380,
@@ -11722,8 +11722,8 @@
                                     "referencedDeclaration": 42,
                                     "src": "6286:20:0",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                      "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                      "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                      "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                                     }
                                   },
                                   "id": 414,
@@ -11746,8 +11746,8 @@
                                   "nodeType": "IndexAccess",
                                   "src": "6286:29:0",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                                    "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                                    "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                                    "typeString": "struct rentEscrowInterface.RentContract storage ref"
                                   }
                                 },
                                 "id": 415,
@@ -11820,8 +11820,8 @@
                                     "referencedDeclaration": 42,
                                     "src": "6340:20:0",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                      "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                      "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                      "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                                     }
                                   },
                                   "id": 421,
@@ -11844,8 +11844,8 @@
                                   "nodeType": "IndexAccess",
                                   "src": "6340:29:0",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                                    "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                                    "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                                    "typeString": "struct rentEscrowInterface.RentContract storage ref"
                                   }
                                 },
                                 "id": 422,
@@ -11984,8 +11984,8 @@
                                   "referencedDeclaration": 42,
                                   "src": "6547:20:0",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                    "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                    "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                                   }
                                 },
                                 "id": 432,
@@ -12008,8 +12008,8 @@
                                 "nodeType": "IndexAccess",
                                 "src": "6547:29:0",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                                  "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                                  "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                                  "typeString": "struct rentEscrowInterface.RentContract storage ref"
                                 }
                               },
                               "id": 433,
@@ -12022,8 +12022,8 @@
                               "referencedDeclaration": 16,
                               "src": "6547:44:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                                "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                                "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                                "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                               }
                             },
                             "id": 434,
@@ -12087,8 +12087,8 @@
                                   "referencedDeclaration": 42,
                                   "src": "6629:20:0",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                    "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                    "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                                   }
                                 },
                                 "id": 439,
@@ -12111,8 +12111,8 @@
                                 "nodeType": "IndexAccess",
                                 "src": "6629:29:0",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                                  "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                                  "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                                  "typeString": "struct rentEscrowInterface.RentContract storage ref"
                                 }
                               },
                               "id": 440,
@@ -12125,8 +12125,8 @@
                               "referencedDeclaration": 16,
                               "src": "6629:44:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                                "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                                "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                                "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                               }
                             },
                             "id": 441,
@@ -12258,8 +12258,8 @@
                                 "referencedDeclaration": 42,
                                 "src": "6733:20:0",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                  "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                  "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                  "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                                 }
                               },
                               "id": 451,
@@ -12282,8 +12282,8 @@
                               "nodeType": "IndexAccess",
                               "src": "6733:29:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                                "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                                "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                                "typeString": "struct rentEscrowInterface.RentContract storage ref"
                               }
                             },
                             "id": 452,
@@ -12296,8 +12296,8 @@
                             "referencedDeclaration": 16,
                             "src": "6733:44:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                              "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                              "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                              "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                             }
                           },
                           "id": 453,
@@ -12464,8 +12464,8 @@
                           "referencedDeclaration": 42,
                           "src": "6850:20:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                            "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                            "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                            "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                           }
                         },
                         "id": 464,
@@ -12488,8 +12488,8 @@
                         "nodeType": "IndexAccess",
                         "src": "6850:29:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                          "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                          "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                          "typeString": "struct rentEscrowInterface.RentContract storage ref"
                         }
                       },
                       "id": 465,
@@ -12561,8 +12561,8 @@
                             "referencedDeclaration": 42,
                             "src": "7012:20:0",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                              "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                              "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                             }
                           },
                           "id": 480,
@@ -12585,8 +12585,8 @@
                           "nodeType": "IndexAccess",
                           "src": "7012:29:0",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                            "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                            "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                            "typeString": "struct rentEscrowInterface.RentContract storage ref"
                           }
                         },
                         "id": 481,
@@ -12635,8 +12635,8 @@
                                     "referencedDeclaration": 42,
                                     "src": "7064:20:0",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                      "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                      "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                      "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                                     }
                                   },
                                   "id": 485,
@@ -12659,8 +12659,8 @@
                                   "nodeType": "IndexAccess",
                                   "src": "7064:29:0",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                                    "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                                    "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                                    "typeString": "struct rentEscrowInterface.RentContract storage ref"
                                   }
                                 },
                                 "id": 486,
@@ -12673,8 +12673,8 @@
                                 "referencedDeclaration": 16,
                                 "src": "7064:44:0",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                                  "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                                  "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                                  "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                                 }
                               },
                               "id": 487,
@@ -12748,8 +12748,8 @@
                                   "referencedDeclaration": 42,
                                   "src": "6904:20:0",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_rentContract_$17_storage_$",
-                                    "typeString": "mapping(uint256 => struct rentEscrowInterface.rentContract storage ref)"
+                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_RentContract_$17_storage_$",
+                                    "typeString": "mapping(uint256 => struct rentEscrowInterface.RentContract storage ref)"
                                   }
                                 },
                                 "id": 469,
@@ -12772,8 +12772,8 @@
                                 "nodeType": "IndexAccess",
                                 "src": "6904:29:0",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_struct$_rentContract_$17_storage",
-                                  "typeString": "struct rentEscrowInterface.rentContract storage ref"
+                                  "typeIdentifier": "t_struct$_RentContract_$17_storage",
+                                  "typeString": "struct rentEscrowInterface.RentContract storage ref"
                                 }
                               },
                               "id": 470,
@@ -12786,8 +12786,8 @@
                               "referencedDeclaration": 16,
                               "src": "6904:44:0",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_redeemProposal_$28_storage",
-                                "typeString": "struct rentEscrowInterface.redeemProposal storage ref"
+                                "typeIdentifier": "t_struct$_RedeemProposal_$28_storage",
+                                "typeString": "struct rentEscrowInterface.RedeemProposal storage ref"
                               }
                             },
                             "id": 471,
@@ -13065,7 +13065,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2022-01-25T05:37:59.133Z",
+  "updatedAt": "2022-01-29T15:12:16.030Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

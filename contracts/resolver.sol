@@ -6,6 +6,8 @@ contract resolver is rentEscrow {
     event sendMessage (string _message);
     event sendAddress (address _message);
     event sendId (uint _message);
+    event sendStruct (rentEscrow _rentEscrow);
+    event sendBool (bool _bool);
 
     address rentEscrowAddress;
 
@@ -22,7 +24,14 @@ contract resolver is rentEscrow {
         uint status;
         address [] judges;
         address [] restrictedJudges;
+        DisputeParty [2] disputeParty;
         string disputeDetail;
+    }
+
+    struct DisputeParty {
+        address disputePartyAddress;
+        string documentation;
+        uint [] judgeVotes;
     }
 
 
@@ -31,8 +40,12 @@ contract resolver is rentEscrow {
         bool waiting;
         uint disputeId;
     } 
-
-    CaseWaitingForJudge caseWaitingForJudge = CaseWaitingForJudge({waiting: false, disputeId: 0});
+    CaseWaitingForJudge caseWaitingForJudge;
+    
+    function UpdateCaseWaitingForJudge  (bool _waiting, uint _disputeId) internal {
+        caseWaitingForJudge.waiting = _waiting;
+        caseWaitingForJudge.disputeId = _disputeId;
+    }
 
     ///@dev Number of judges needed for this contract
     uint numberOfJudges = 3;
@@ -43,7 +56,11 @@ contract resolver is rentEscrow {
     }
 
 
-    mapping(uint =>DisputeCase) DisputeCaseMapping;
+    mapping(uint =>DisputeCase) public DisputeCaseMapping;
+
+    function getDisputeCase (uint _disputeId) public view returns (DisputeCase memory _disputeCase) {
+        return DisputeCaseMapping[_disputeId];
+    }
 
     ///@dev to establish connection to other contract
     ///@custom:later  this works fine for single contract. I need this to be modular and can connect multiple contract on the fly
@@ -54,84 +71,82 @@ contract resolver is rentEscrow {
     }
 
     function getNewContractToResolve () public {
-        uint id;
+         emit sendMessage("Starting NewContractToResolve");
         rentEscrowInterface re = rentEscrowInterface(rentEscrowAddress);
-        id = re.getContractToResolve().rentId;  
-        emit sendId(id) ;
-
-        ///@custom:later I am calling the getContractToresolve each time I need a attribute. Which is retarded. Need to fix this.
-        DisputeCase memory disputeCase = DisputeCase({
-            disputeId: re.getContractToResolve().rentId,
-            status: 100,
-            judges: new address[](numberOfJudges),
-            restrictedJudges: new address[](2),
-            disputeDetail: re.getContractToResolve().contractDetail });
-
-        ///@dev updating restricted judges. How can I do this in the intial call?
-        disputeCase.restrictedJudges[0] = re.getContractToResolve().tenant;
-        disputeCase.restrictedJudges[1] = re.getContractToResolve().landlord;
         
-        DisputeCaseMapping[re.getContractToResolve().rentId] = disputeCase;
+        RentContract memory rentContract = re.getContractToResolve();
+        
+        ///@dev what if that particular rent Id already exists?
+        ///@custom:later if I get this right, newDisputeCase is a pointer to a place in storage. If this function is called multiple times on same rentID (mapping key) data will be overwritten
+        DisputeCase storage newDisputeCase = DisputeCaseMapping[rentContract.rentId];
+        newDisputeCase.disputeId = rentContract.rentId;
+        newDisputeCase.status = 100;
+        newDisputeCase.disputeDetail = "Hello";
 
-        caseWaitingForJudge.waiting = true;
-        caseWaitingForJudge.disputeId = re.getContractToResolve().rentId;
+        ///@custom:later Seems ugly...
+        DisputeParty memory disputeParty1 = DisputeParty({
+            disputePartyAddress: rentContract.landlord,
+            documentation: "",
+            judgeVotes: new uint [](numberOfJudges)
+        });
+
+        DisputeParty memory disputeParty2 = DisputeParty({
+            disputePartyAddress: rentContract.tenant,
+            documentation: "",
+            judgeVotes: new uint [](numberOfJudges)
+        });
+
+        newDisputeCase.disputeParty[0] = disputeParty1;
+        newDisputeCase.disputeParty[1] = disputeParty2;
+
+        UpdateCaseWaitingForJudge(true,rentContract.rentId );
 
     }
-    /**@custom:later this currently misses couple of requirements. among others:
-    - what if landlord should be judge?)
-    - each judge must be unique id
 
-     **/
     function assignJudge() public {
+        emit sendMessage("Starting Assign Judge");
+        //emit sendBool(caseWaitingForJudge.waiting);
+        //emit sendBool(waiting);
        
         if (caseWaitingForJudge.waiting == false) {
+            emit sendMessage("Nothing is waiting");
             getNewContractToResolve();
         }
         ///@custom:later I am shutting this off now for development reasons
         //require(testJudgeEligibility(DisputeCaseMapping[caseWaitingForJudge.disputeId]), "This address cannot be judge");
-
+         emit sendMessage("Will asign judge now");
         DisputeCaseMapping[caseWaitingForJudge.disputeId].judges.push(msg.sender);
+        emit sendId(DisputeCaseMapping[caseWaitingForJudge.disputeId].judges.length);
+        
+        for (uint i = 0; i< DisputeCaseMapping[caseWaitingForJudge.disputeId].judges.length; i++ )
+            {emit sendAddress(DisputeCaseMapping[caseWaitingForJudge.disputeId].judges[i]);}
+        
+        
 
-        if (DisputeCaseMapping[caseWaitingForJudge.disputeId].judges.length <= numberOfJudges) {
-            caseWaitingForJudge.waiting = false;
+        if (DisputeCaseMapping[caseWaitingForJudge.disputeId].judges.length >= numberOfJudges) {
+            emit sendMessage("enough judges");
+            emit sendId(DisputeCaseMapping[caseWaitingForJudge.disputeId].judges.length);
+            UpdateCaseWaitingForJudge(false, 0);
         }
     }
     ///@custom:later is this a case for modifier?
-    function testJudgeEligibility (DisputeCase memory _disputeCase) internal view returns (bool _eligible) {
-        _eligible == true;
+    function testJudgeEligibility (DisputeCase storage _disputeCase) internal view returns (bool _eligible) {
+         _eligible == true;
 
-    ///@dev test if address is already judge
-    for(uint i=0; i<_disputeCase.judges.length; i++){
-            if(msg.sender == _disputeCase.judges[i]) {_eligible = false;}
+        ///@dev test if address is already judge
+        ///@custom:later this wasn't tested
+        for(uint i=0; i<_disputeCase.judges.length; i++){
+                if(msg.sender == _disputeCase.judges[i]) {_eligible = false;}
+            }
+        ///@dev test if address is on the restricted list
+        for(uint i=0; i<_disputeCase.disputeParty.length; i++){
+                if(msg.sender == _disputeCase.disputeParty[i].disputePartyAddress) {_eligible = false;}
+            }
+
         }
-    ///@dev test if address is on the restricted list
-    for(uint i=0; i<_disputeCase.restrictedJudges.length; i++){
-            if(msg.sender == _disputeCase.restrictedJudges[i]) {_eligible = false;}
-        }
+
+    //function castVote (uint _disputeId)
 
 
     }
 
-
-    }
-
-    // function test() public {
-    //     uint id;
-    //     rentEscrowInterface re = rentEscrowInterface(rentEscrowAddress);
-    //     id = re.getContractToResolve().rentId;  
-    //     emit sendId(id) ;
-
-    //     ///@custom:later I am calling the getContractToresolve each time I need a attribute. Which is retarded. Need to fix this.
-    //     DisputeCase memory disputeCase = DisputeCase({
-    //         disputeId: re.getContractToResolve().rentId,
-    //         status: 100,
-    //         judges: new address[](numberOfJudges),
-    //         disputeDetail: re.getContractToResolve().contractDetail });
-        
-    //     DisputeCaseMapping[re.getContractToResolve().rentId] = disputeCase;
-
-    //     caseWaitingForJudge.waiting = true;
-    //     caseWaitingForJudge.disputeId = re.getContractToResolve().rentId;
-
-    // }
-    
