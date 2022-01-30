@@ -2,7 +2,10 @@ pragma solidity ^0.8.10;
 import "./rentEscrow.sol";
 
 contract resolver is rentEscrow {
+    ///@dev events for production
+    event sendDisputeId(bytes32);
     //event sendTenant (uint _id);
+    ///@dev events for development
     event sendMessage (string _message);
     event sendAddress (address _message);
     event sendId (uint _message);
@@ -20,7 +23,7 @@ contract resolver is rentEscrow {
     ///@param finalResult contains final result after each judge casted their vote
     
     struct DisputeCase {
-        uint disputeId;
+        bytes32 disputeId;
         uint status;
         address [] judges;
         address [] restrictedJudges;
@@ -38,14 +41,16 @@ contract resolver is rentEscrow {
     ///@dev this is a flag to see if I need to reach for new DisputeCase or I just fill new address into existing one
     struct CaseWaitingForJudge {
         bool waiting;
-        uint disputeId;
+        bytes32 disputeId;
     } 
     CaseWaitingForJudge caseWaitingForJudge;
     
-    function UpdateCaseWaitingForJudge  (bool _waiting, uint _disputeId) internal {
+    function UpdateCaseWaitingForJudge  (bool _waiting, bytes32 _disputeId) internal {
         caseWaitingForJudge.waiting = _waiting;
         caseWaitingForJudge.disputeId = _disputeId;
     }
+
+    uint disputeIdNonce = 0;
 
     ///@dev Number of judges needed for this contract
     uint numberOfJudges = 3;
@@ -56,9 +61,9 @@ contract resolver is rentEscrow {
     }
 
 
-    mapping(uint =>DisputeCase) public DisputeCaseMapping;
+    mapping(bytes32 =>DisputeCase) public DisputeCaseMapping;
 
-    function getDisputeCase (uint _disputeId) public view returns (DisputeCase memory _disputeCase) {
+    function getDisputeCase (bytes32 _disputeId) public view returns (DisputeCase memory _disputeCase) {
         return DisputeCaseMapping[_disputeId];
     }
 
@@ -70,16 +75,20 @@ contract resolver is rentEscrow {
          emit sendAddress(rentEscrowAddress);
     }
 
+    ///@notice requests new new dispute case from external contract. It is external contract job to send valid dispute case
     function getNewContractToResolve () public {
-         emit sendMessage("Starting NewContractToResolve");
+
         rentEscrowInterface re = rentEscrowInterface(rentEscrowAddress);
-        
         RentContract memory rentContract = re.getContractToResolve();
+             
+        ///@dev I will create unique hash for every dispute case. This contract doesn't care if it resolves same rentCotnract multiple times. It is up to the rentContract to manage this
+        ///@dev I have no special motivation to hash the id, other than to a) try it b) make it impossible to view
+        bytes32 disputeId = keccak256(abi.encodePacked(rentContract.rentId + disputeIdNonce));
+        disputeIdNonce++;
         
-        ///@dev what if that particular rent Id already exists?
         ///@custom:later if I get this right, newDisputeCase is a pointer to a place in storage. If this function is called multiple times on same rentID (mapping key) data will be overwritten
-        DisputeCase storage newDisputeCase = DisputeCaseMapping[rentContract.rentId];
-        newDisputeCase.disputeId = rentContract.rentId;
+        DisputeCase storage newDisputeCase = DisputeCaseMapping[disputeId];
+        newDisputeCase.disputeId = disputeId;
         newDisputeCase.status = 100;
         newDisputeCase.disputeDetail = "Hello";
 
@@ -99,49 +108,50 @@ contract resolver is rentEscrow {
         newDisputeCase.disputeParty[0] = disputeParty1;
         newDisputeCase.disputeParty[1] = disputeParty2;
 
-        UpdateCaseWaitingForJudge(true,rentContract.rentId );
+        ///@dev updates flag for nex runs. Now we have a open case, but not enough judges. Therefore we dont need to ask for new disputes
+        UpdateCaseWaitingForJudge(true,disputeId );
 
     }
 
+    ///@notice Entry point for contract. Dispute lifecycle starts here by assigning judge to existing dispute or requesting new dispute from external contract
     function assignJudge() public {
-        emit sendMessage("Starting Assign Judge");
-        //emit sendBool(caseWaitingForJudge.waiting);
-        //emit sendBool(waiting);
-       
+        ///@dev decide if I am missing judges in existing dispute. If yes, this gets skipped, otherwise will ask for new resolution case
         if (caseWaitingForJudge.waiting == false) {
-            emit sendMessage("Nothing is waiting");
             getNewContractToResolve();
-        }
+            }
         ///@custom:later I am shutting this off now for development reasons
-        //require(testJudgeEligibility(DisputeCaseMapping[caseWaitingForJudge.disputeId]), "This address cannot be judge");
-         emit sendMessage("Will asign judge now");
-        DisputeCaseMapping[caseWaitingForJudge.disputeId].judges.push(msg.sender);
-        emit sendId(DisputeCaseMapping[caseWaitingForJudge.disputeId].judges.length);
-        
-        for (uint i = 0; i< DisputeCaseMapping[caseWaitingForJudge.disputeId].judges.length; i++ )
-            {emit sendAddress(DisputeCaseMapping[caseWaitingForJudge.disputeId].judges[i]);}
-        
+        require(testJudgeEligibility(DisputeCaseMapping[caseWaitingForJudge.disputeId]), "This address cannot be judge");
         
 
+        ///@dev emitting disputeId for future reference in front end
+        emit sendDisputeId(DisputeCaseMapping[caseWaitingForJudge.disputeId].disputeId);
+        
+        //@dev adding msg sender as a new judge
+        DisputeCaseMapping[caseWaitingForJudge.disputeId].judges.push(msg.sender);
+                
+        ///@dev decide whether we have enough judges. if yes, nex assign judge will call getNewContractToResolve
         if (DisputeCaseMapping[caseWaitingForJudge.disputeId].judges.length >= numberOfJudges) {
-            emit sendMessage("enough judges");
-            emit sendId(DisputeCaseMapping[caseWaitingForJudge.disputeId].judges.length);
             UpdateCaseWaitingForJudge(false, 0);
         }
     }
     ///@custom:later is this a case for modifier?
+    ///@dev multiple tests to control who can be judge
+    ///@dev we are on the conservative side and starting with default False. 
+    ///@dev this seems extremely verbose, please shill me something more elegant
     function testJudgeEligibility (DisputeCase storage _disputeCase) internal view returns (bool _eligible) {
-         _eligible == true;
+        uint judgeCount;
+        uint disputePartyCount;
 
-        ///@dev test if address is already judge
-        ///@custom:later this wasn't tested
+        ///@dev test if address is already judge. 
         for(uint i=0; i<_disputeCase.judges.length; i++){
-                if(msg.sender == _disputeCase.judges[i]) {_eligible = false;}
+            judgeCount = msg.sender == _disputeCase.judges[i] ? judgeCount+1:judgeCount;
             }
         ///@dev test if address is on the restricted list
         for(uint i=0; i<_disputeCase.disputeParty.length; i++){
-                if(msg.sender == _disputeCase.disputeParty[i].disputePartyAddress) {_eligible = false;}
+            disputePartyCount = msg.sender == _disputeCase.disputeParty[i].disputePartyAddress ? disputePartyCount+1:disputePartyCount+0;
             }
+        
+        _eligible = judgeCount+disputePartyCount==0 ? true:false;
 
         }
 
