@@ -26,6 +26,7 @@ contract resolver is rentEscrow {
         bytes32 disputeId;
         uint status;
         address [] judges;
+        address [] judgesWhoVoted;
         address [] restrictedJudges;
         DisputeParty [2] disputeParty;
         string disputeDetail;
@@ -36,7 +37,6 @@ contract resolver is rentEscrow {
         string documentation;
         uint [] judgeVotes;
     }
-
 
     ///@dev this is a flag to see if I need to reach for new DisputeCase or I just fill new address into existing one
     struct CaseWaitingForJudge {
@@ -62,9 +62,29 @@ contract resolver is rentEscrow {
 
 
     mapping(bytes32 =>DisputeCase) public DisputeCaseMapping;
+    mapping(address => bytes32 []) public AddressToCaseMapping;
 
-    function getDisputeCase (bytes32 _disputeId) public view returns (DisputeCase memory _disputeCase) {
+    function getDisputeCase (bytes32 _disputeId) public view returns (DisputeCase memory) {
+
         return DisputeCaseMapping[_disputeId];
+    }
+    ///@notice Use this to get list of all your cases
+    ///@dev One user can have multiple dispute cases. Therefore I need to coerce from storage to list. I don't know if there is more 
+    //elegant way to do this
+     function getMyDisputeCase () public view returns (DisputeCase [] memory) {
+         bytes32 [] memory disputeCaseIds  = getMyDisputeCaseId();
+        ///@custom:later I don't know exactly what I am doing here 
+         DisputeCase [] memory disputeCaseList = new DisputeCase[](disputeCaseIds.length);
+        
+         for (uint i = 0; i < disputeCaseIds.length; i++) {
+             disputeCaseList[i] = getDisputeCase(disputeCaseIds[i]);
+         }
+         return disputeCaseList;
+     }
+
+    ///@notice use this to get Ids for further query
+    function getMyDisputeCaseId () public view returns (bytes32 [] memory _disputeCaseId) {
+        return AddressToCaseMapping[msg.sender];
     }
 
     ///@dev to establish connection to other contract
@@ -96,17 +116,21 @@ contract resolver is rentEscrow {
         DisputeParty memory disputeParty1 = DisputeParty({
             disputePartyAddress: rentContract.landlord,
             documentation: "",
-            judgeVotes: new uint [](numberOfJudges)
+            judgeVotes: new uint [](0)
         });
 
         DisputeParty memory disputeParty2 = DisputeParty({
             disputePartyAddress: rentContract.tenant,
             documentation: "",
-            judgeVotes: new uint [](numberOfJudges)
+            judgeVotes: new uint [](0)
         });
 
         newDisputeCase.disputeParty[0] = disputeParty1;
         newDisputeCase.disputeParty[1] = disputeParty2;
+
+        ///@dev update mappping, so dispute parties can track their own dispute cases
+        AddressToCaseMapping[rentContract.landlord].push(disputeId);
+        AddressToCaseMapping[rentContract.tenant].push(disputeId);
 
         ///@dev updates flag for nex runs. Now we have a open case, but not enough judges. Therefore we dont need to ask for new disputes
         UpdateCaseWaitingForJudge(true,disputeId );
@@ -126,8 +150,9 @@ contract resolver is rentEscrow {
         ///@dev emitting disputeId for future reference in front end
         emit sendDisputeId(DisputeCaseMapping[caseWaitingForJudge.disputeId].disputeId);
         
-        //@dev adding msg sender as a new judge
+        //@dev adding msg sender as a new judge and updating the mapping
         DisputeCaseMapping[caseWaitingForJudge.disputeId].judges.push(msg.sender);
+        AddressToCaseMapping[msg.sender].push(DisputeCaseMapping[caseWaitingForJudge.disputeId].disputeId);
                 
         ///@dev decide whether we have enough judges. if yes, nex assign judge will call getNewContractToResolve
         if (DisputeCaseMapping[caseWaitingForJudge.disputeId].judges.length >= numberOfJudges) {
@@ -155,7 +180,38 @@ contract resolver is rentEscrow {
 
         }
 
-    //function castVote (uint _disputeId)
+    ///@dev test to see if address can vote or if already voted
+    function testJudgeEligibilityToVote (DisputeCase storage _disputeCase) internal view {
+
+        ///@dev test if address is judge
+        uint judgeCounter;
+        for(uint i=0; i<_disputeCase.judges.length; i++){
+            judgeCounter = msg.sender == _disputeCase.judges[i] ? judgeCounter+1:judgeCounter;
+            }
+        require(judgeCounter >0 ,"Address not a judge");
+
+        //test if address already voted
+        for(uint i=0; i<_disputeCase.judgesWhoVoted.length; i++){
+            require(msg.sender!=_disputeCase.judgesWhoVoted[i], "Judge Already voted");
+            }
+
+    }
+
+    function castVote(uint [2] memory _judgeVote, bytes32 _disputeId) external {
+        require(_judgeVote[0] + _judgeVote[1] == 100, "Votes not 100");
+        DisputeCase storage  disputeCase = DisputeCaseMapping[_disputeId];
+        testJudgeEligibilityToVote(disputeCase);
+
+        ///@dev this is suboptimal as it relies on order of votes within array. Should be linked to disputeParty address
+        
+        disputeCase.disputeParty[0].judgeVotes.push(_judgeVote[0]);
+        disputeCase.disputeParty[1].judgeVotes.push(_judgeVote[1]);
+        disputeCase.judgesWhoVoted.push(msg.sender);
+
+        emit sendId(disputeCase.disputeParty[0].judgeVotes[0]);        
+
+
+    }
 
 
     }

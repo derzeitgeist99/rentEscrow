@@ -43,6 +43,7 @@ contract("rentEscrow", async accounts => {
         
         receipt = await resolver.assignJudge({from: accounts[6]})
         disputeId = parseEventValue(receipt,"sendDisputeId")
+        disputeId1 = disputeId[0]
         disputeCase1 = await resolver.getDisputeCase(disputeId[0]);
 
         assert.equal(disputeCase1.judges[0], accounts[6])
@@ -75,6 +76,8 @@ contract("rentEscrow", async accounts => {
         assert.equal(disputeCase3.status,100)
         assert.equal(disputeCase3.disputeParty.length,2)
 
+        disputeCase = await resolver.getMyDisputeCaseId({from:accounts[1]})
+
     })
 
     it("judge number 4 should create new dispute", async () => {
@@ -87,6 +90,7 @@ contract("rentEscrow", async accounts => {
         assert.equal(disputeCase4.status,100)
         assert.equal(disputeCase4.disputeParty.length,2)
         assert.notEqual(disputeCase1.disputeId,disputeCase4.disputeId)
+        
 
     })
 
@@ -95,6 +99,44 @@ contract("rentEscrow", async accounts => {
         await expectRevert(resolver.assignJudge({from: disputeCase4.disputeParty[0].disputePartyAddress}),"This address cannot be judge")
         await expectRevert(resolver.assignJudge({from: disputeCase4.disputeParty[1].disputePartyAddress}),"This address cannot be judge")
         
+    })
+
+    it("should return my own case", async () => {
+    ///@custom:later test could be more thorough
+        disputeCase = await resolver.getMyDisputeCase({from:accounts[1]})
+        
+        assert.equal(disputeCase[0].disputeParty[0].disputePartyAddress,accounts[1])
+        assert.equal(disputeCase[1].disputeParty[0].disputePartyAddress,accounts[1])
+    })
+
+    it("Happy Path: should record 3 votes", async() => {
+
+        voteArr = [
+            [[40,60],accounts[6],0],
+            [[30,70],accounts[7],1],
+            [[30,70],accounts[8],2]]
+
+        for (let vote of voteArr){
+            await resolver.castVote(vote[0], disputeId1, {from:vote[1]})
+            disputeCase = await resolver.getDisputeCase(disputeId1)
+            assert.equal(disputeCase.disputeParty[0].judgeVotes[vote[2]],vote[0][0])
+            assert.equal(disputeCase.disputeParty[1].judgeVotes[vote[2]],vote[0][1])
+
+        }
+    })
+
+    it("Unhappy Path: non judge, multiple votes, not 100%",async () => {
+        voteArr = [
+            [[40,60],accounts[1],0,"Address not a judge"],
+            [[40,60],accounts[6],0,"Judge Already voted"],
+            [[40,100],accounts[6],0,"Votes not 100"],
+            [[40,0],accounts[6],0,"Votes not 100"]]
+        for (let vote of voteArr) {
+            await expectRevert(resolver.castVote(vote[0], disputeId1, {from:vote[1]}),vote[3])
+            
+
+        }
+
     })
         
 })
