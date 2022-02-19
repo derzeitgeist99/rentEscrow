@@ -227,7 +227,6 @@ contract resolver is rentEscrow {
         ///@custom:later Which is better? This?
         result = aggregateJudgeVotes(_disputeId);
         result = rebaseVotesIncludeFee(feePct, result);
-
         //or this: result = rebaseVotesIncludeFee(feePct, aggregateJudgeVotes(_disputeId));
 
         

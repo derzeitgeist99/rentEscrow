@@ -5,7 +5,7 @@ const { toBN,toNumber } = web3.utils;
 const {expectRevert} = require("@openzeppelin/test-helpers");
 const { inTransaction } = require("@openzeppelin/test-helpers/src/expectEvent");
 const { assertion } = require("@openzeppelin/test-helpers/src/expectRevert");
-const {parseEventValue,getContractBalance,getAddressBalance,getGasSpent,createAndAccept} = require("./testUtils.js")
+const {parseEventValue,getContractBalance,getAddressBalance,getGasSpent,createAndAccept,saveInitialBalance,saveTerminalBalance} = require("./testUtils.js")
 
 
 
@@ -15,6 +15,7 @@ const {parseEventValue,getContractBalance,getAddressBalance,getGasSpent,createAn
 contract("rentEscrow", async accounts => {
     let rEsc;
     let resolver;
+    const feePct = 10;
 
     before (async () =>{
         rEsc = await rentEscrow.new();
@@ -23,6 +24,7 @@ contract("rentEscrow", async accounts => {
         rEscContractAddress = await rEsc.address
         receipt = await resolver.setRentEscrowAddress(rEscContractAddress)
         resolverContractAddress = await resolver.address
+        await rEsc.setResolverAddress(resolverContractAddress)
 
     ///@dev deploying several rentContract, so we have somethong to chew on
 
@@ -110,7 +112,8 @@ contract("rentEscrow", async accounts => {
     })
 
     it("Happy Path: should record 3 votes", async() => {
-
+        partyArr = await saveInitialBalance(1,resolverContractAddress,rEsc)
+        
         voteArr = [
             [[40,60],accounts[6],0],
             [[30,70],accounts[7],1],
@@ -123,6 +126,9 @@ contract("rentEscrow", async accounts => {
             assert.equal(disputeCase.disputeParty[1].judgeVotes[vote[2]],vote[0][1])
 
         }
+        partyArr = await saveTerminalBalance(partyArr)
+        console.log(partyArr);
+
     })
 
     it("Unhappy Path: non judge, multiple votes, not 100%",async () => {
@@ -140,11 +146,12 @@ contract("rentEscrow", async accounts => {
     })
 
     it("should test the transfer of funds to contract parties", async () => {
+        
+        
         const rentContracts = await rEsc.rentContractsMapping([1])
-        console.log(rentContracts.redeemProposal)
-        console.log(rentContracts)
-        balance = await web3.eth.getBalance(resolverContractAddress)
-        console.log(balance);
+
+        
+        
     })
 
     // it("should create redeem proposal", async () => {
