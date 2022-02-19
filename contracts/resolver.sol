@@ -1,3 +1,4 @@
+// SPDX-License-Identifier:	CC-BY-4.0
 pragma solidity ^0.8.10;
 import "./rentEscrow.sol";
 
@@ -24,6 +25,7 @@ contract resolver is rentEscrow {
     
     struct DisputeCase {
         bytes32 disputeId;
+        uint rentId;
         uint status;
         address [] judges;
         address [] judgesWhoVoted;
@@ -37,6 +39,8 @@ contract resolver is rentEscrow {
         string documentation;
         uint [] judgeVotes;
     }
+
+    uint feePct = 10;
 
     ///@dev this is a flag to see if I need to reach for new DisputeCase or I just fill new address into existing one
     struct CaseWaitingForJudge {
@@ -109,6 +113,7 @@ contract resolver is rentEscrow {
         ///@custom:later if I get this right, newDisputeCase is a pointer to a place in storage. If this function is called multiple times on same rentID (mapping key) data will be overwritten
         DisputeCase storage newDisputeCase = DisputeCaseMapping[disputeId];
         newDisputeCase.disputeId = disputeId;
+        newDisputeCase.rentId = rentContract.rentId;
         newDisputeCase.status = 100;
         newDisputeCase.disputeDetail = "Hello";
 
@@ -199,7 +204,7 @@ contract resolver is rentEscrow {
 
     function castVote(uint [2] memory _judgeVote, bytes32 _disputeId) external {
         require(_judgeVote[0] + _judgeVote[1] == 100, "Votes not 100");
-        DisputeCase storage  disputeCase = DisputeCaseMapping[_disputeId];
+        DisputeCase storage disputeCase = DisputeCaseMapping[_disputeId];
         testJudgeEligibilityToVote(disputeCase);
 
         ///@dev this is suboptimal as it relies on order of votes within array. Should be linked to disputeParty address
@@ -208,11 +213,67 @@ contract resolver is rentEscrow {
         disputeCase.disputeParty[1].judgeVotes.push(_judgeVote[1]);
         disputeCase.judgesWhoVoted.push(msg.sender);
 
-        emit sendId(disputeCase.disputeParty[0].judgeVotes[0]);        
-
-
+        ///@dev Test if all judges voted. If yes, trigger createRedeem proposal and release funds 
+        if (disputeCase.disputeParty[0].judgeVotes.length == numberOfJudges &&
+        disputeCase.disputeParty[1].judgeVotes.length == numberOfJudges) {
+            triggerCreateRedeemProposal(_disputeId);
+        }
     }
 
+    
+    
+    function triggerCreateRedeemProposal(bytes32 _disputeId) public {
+        uint [] memory result;
+        ///@custom:later Which is better? This?
+        result = aggregateJudgeVotes(_disputeId);
+        result = rebaseVotesIncludeFee(feePct, result);
+
+        //or this: result = rebaseVotesIncludeFee(feePct, aggregateJudgeVotes(_disputeId));
+
+        
+        rentEscrowInterface re = rentEscrowInterface(rentEscrowAddress);
+        re.createRedeemProposal(
+            DisputeCaseMapping[_disputeId].rentId,
+            result[0],
+            result[1],
+            result[2]
+        );
+        re.acceptRedeemProposal(DisputeCaseMapping[_disputeId].rentId);
+    }
+
+    function aggregateJudgeVotes (bytes32 _disputeId) private view returns (uint [] memory) {
+        DisputeCase storage disputeCase = DisputeCaseMapping[_disputeId];
+        uint [] memory result = new uint[](disputeCase.disputeParty.length);
+    
+
+        for (uint i = 0; i<disputeCase.disputeParty.length; i++){
+            uint cummulVotes = 0;
+            for (uint j = 0; j < disputeCase.disputeParty[i].judgeVotes.length; j++){
+                cummulVotes += disputeCase.disputeParty[i].judgeVotes[j];
+            }
+            result[i] = cummulVotes/disputeCase.disputeParty[i].judgeVotes.length;
+            
+        }
+        return result;
+
+    }
+    ///@dev This rebases Votes to include share of fee, that get into Resolver contract
+    ///@dev In case of 2 parties should return 3 values. 1 and 2, is share of dispute parties. 3 is fee share.
+    function rebaseVotesIncludeFee (uint _feeShare, uint [] memory votes) private pure returns (uint [] memory) {
+        uint [] memory result = new uint[](votes.length + 1);
+        
+        for (uint i = 0; i < votes.length; i++ ){
+            result[i] = (votes[i]*(100-_feeShare))/100;
+            
+        }
+        ///@custom:later This is dirty, but I dont know how to round properly and need the sum of result elements to be 100
+        result[result.length - 1] = 100 - result[0] - result[1];
+        return result;
+    }
+
+    receive() external payable {
+
+    }
 
     }
 

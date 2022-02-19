@@ -20,9 +20,9 @@ contract("rentEscrow", async accounts => {
         rEsc = await rentEscrow.new();
         resolver = await resolverContract.new();
        
-        contractAddress = await rEsc.address
-        receipt = await resolver.setRentEscrowAddress(contractAddress)
-        let message = parseEventValue(receipt, "sendAddress")
+        rEscContractAddress = await rEsc.address
+        receipt = await resolver.setRentEscrowAddress(rEscContractAddress)
+        resolverContractAddress = await resolver.address
 
     ///@dev deploying several rentContract, so we have somethong to chew on
 
@@ -138,5 +138,30 @@ contract("rentEscrow", async accounts => {
         }
 
     })
+
+    it("should test the transfer of funds to contract parties", async () => {
+        const rentContracts = await rEsc.rentContractsMapping([1])
+        console.log(rentContracts.redeemProposal)
+        console.log(rentContracts)
+        balance = await web3.eth.getBalance(resolverContractAddress)
+        console.log(balance);
+    })
+
+    // it("should create redeem proposal", async () => {
+    //     ///@dev Set the resolverAddress
+    //     console.log(resolverContractAddress);
+    //     await rEsc.setResolverAddress(resolverContractAddress)
+
+
+    //     ///@dev createRedeem proposal
+    //     receipt =  await resolver.triggerCreateRedeemProposal(disputeId1)
+    //     ///@dev check that this happened
+    //     const rentContracts = await rEsc.rentContractsMapping([1])
+    //     console.log(rentContracts.redeemProposal)
+    //     console.log(rentContracts)
+    //     balance = await web3.eth.getBalance(resolverContractAddress)
+    //     console.log(balance);
+
+    // })
         
 })

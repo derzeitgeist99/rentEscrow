@@ -1,16 +1,17 @@
+// SPDX-License-Identifier:	CC-BY-4.0
 pragma solidity ^0.8.10;
 
 interface rentEscrowInterface { 
 
-struct RentContract {
-        uint rentId;
-        address tenant;
-        address landlord;
-        uint256 escrowValue;
-        string contractDetail;
-        string status;
-        RedeemProposal redeemProposal;
-    }
+    struct RentContract {
+            uint rentId;
+            address tenant;
+            address landlord;
+            uint256 escrowValue;
+            string contractDetail;
+            string status;
+            RedeemProposal redeemProposal;
+        }
 
     struct RedeemProposal {
         uint tenantShare;
@@ -21,55 +22,36 @@ struct RentContract {
     }
 
     function getContractToResolve () external view returns (RentContract memory);
-}
+    function createRedeemProposal (uint _rentId, uint _tenantShare, uint _landlordShare, uint _feeShare ) external;
+    function acceptRedeemProposal(uint _rentId) external;
+    }
 
 contract rentEscrow is rentEscrowInterface {
+///@custom:navigation Events
+    event sendAddressRent (address _message); 
+    event sendStringRent (string _message); 
+    event sendIdRent (uint _message); 
+    ///@dev in order to give some feedback that rentcontract was created, we will emit its id. Later maybe be filled with some other
+    event rentContractId (uint _rentId);
 
-    // struct RentContract {
-    //     uint rentId;
-    //     address tenant;
-    //     address landlord;
-    //     uint256 escrowValue;
-    //     string contractDetail;
-    //     string status;
-    //     redeemProposal redeemProposal;
-    // }
-
-    // struct redeemProposal {
-    //     uint tenantShare;
-    //     uint landlordShare;
-    //     uint feeShare;
-    //     address feeAddress;
-    //     uint proposalStatus; /// @dev 100 Proposed 200 Redeemed by tenant 202 Redemed via Dispute Resolution 301 rejected by landlord 302 rejected by tenant
-    // }
-
+///@custom:navigation Mappings
     mapping(uint => RentContract) public rentContractsMapping;
 
     // will use this to search contracts by address
     mapping(address => uint[]) public addressMapping;
     uint public nextRentId = 0;
 
-    ///@dev in order to give some feedback that rentcontract was created, we will emit its id. Later maybe be filled with some other
-    event rentContractId (uint _rentId);
 
-    ///@dev this is used by retrieve mapping by another contract
-    ///@custom:later now gives just first contract. Need to add logic to return contract where redeemProposal was rejected
-     function getContractToResolve () external view returns (RentContract memory) {
-         uint _rentId = 1;
-         return rentContractsMapping[_rentId];
+    ///@dev this contracf address is allowed to trigger redeem proposal creation
+    mapping(string => address) public importantAddresses;
+    mapping(string => string) public importantStrings;
+
+    ///@dev sets
+    function setResolverAddress (address _resolverAddress) public  {
+        importantAddresses["ResolverAddress"] = _resolverAddress;
+        importantStrings["ResolverAddress"] = "Hello";
     }
-    
-    ///@dev Should go to some utils contract
-    function updateAddressMapping (uint _rentId) internal {
-        addressMapping[msg.sender].push(_rentId);
-    }
-
-    ///@notice returns all contracts  where sender is involved party
-    function getContractsByAddress () external view returns ( uint[] memory ){
-    return addressMapping[msg.sender];
-
-    }
-
+///@custom:navigation RentContracts
     function proposeNewContract (uint256 _escrowValue, string memory _contractDetail) external {
         RentContract memory myRentContract;
      
@@ -94,21 +76,21 @@ contract rentEscrow is rentEscrowInterface {
         updateAddressMapping(_rentId);
 
     }
-
-    function createRedeemProposal (uint _rentId, uint _tenantShare, uint _landlordShare, uint _feeShare, address _feeAddress  ) external {
+///@custom:navigation Redeems
+    function createRedeemProposal (uint _rentId, uint _tenantShare, uint _landlordShare, uint _feeShare ) external {
         
         uint shareSum = _tenantShare + _landlordShare + _feeShare;
         require(shareSum == 100, "TenantShare + Landlord Share + Fee Share is not 100%" );
 
-        //only landlord can create redeemProposal
+        //only landlord or resolver can create redeemProposal
         // test required
-        require(msg.sender ==  rentContractsMapping[_rentId].landlord, "Only Landlord can create redeem proposal");
+        require(msg.sender ==  rentContractsMapping[_rentId].landlord || msg.sender == importantAddresses["ResolverAddress"] , "Only Landlord or Resolver can create redeem proposal");
 
         rentContractsMapping[_rentId].redeemProposal.tenantShare = _tenantShare;
         rentContractsMapping[_rentId].redeemProposal.landlordShare = _landlordShare;
         rentContractsMapping[_rentId].redeemProposal.feeShare = _feeShare;
         //Later: fee address must be protected
-        rentContractsMapping[_rentId].redeemProposal.feeAddress = _feeAddress;
+        rentContractsMapping[_rentId].redeemProposal.feeAddress = importantAddresses["ResolverAddress"];
         rentContractsMapping[_rentId].redeemProposal.proposalStatus = 100;
     
     }
@@ -116,7 +98,7 @@ contract rentEscrow is rentEscrowInterface {
     function acceptRedeemProposal(uint _rentId) external {
         //only tenant can accept redeemProposal
         // test required
-        require(msg.sender ==  rentContractsMapping[_rentId].tenant,"Only tenant can accept redeem proposal");
+        require(msg.sender ==  rentContractsMapping[_rentId].tenant || msg.sender == importantAddresses["ResolverAddress"],"Only tenant can accept redeem proposal");
 
         
         uint escrowValue = rentContractsMapping[_rentId].escrowValue;
@@ -170,8 +152,25 @@ contract rentEscrow is rentEscrowInterface {
 
     }
  
-
+///@custom:navigation Development Helpers
     function devGetBalance () external view returns(uint){
         return(address(this).balance);
     }
+    ///@dev this is used by retrieve mapping by another contract
+    ///@custom:later now gives just first contract. Need to add logic to return contract where redeemProposal was rejected
+    function getContractToResolve () external view returns (RentContract memory) {
+         uint _rentId = 1;
+         return rentContractsMapping[_rentId];
+        }
+    
+    ///@dev Should go to some utils contract
+    function updateAddressMapping (uint _rentId) internal {
+        addressMapping[msg.sender].push(_rentId);
+        }
+
+    ///@notice returns all contracts  where sender is involved party
+    function getContractsByAddress () external view returns ( uint[] memory ){
+    return addressMapping[msg.sender];
+
+        }
 }
