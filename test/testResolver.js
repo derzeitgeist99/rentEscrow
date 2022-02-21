@@ -112,8 +112,10 @@ contract("rentEscrow", async accounts => {
     })
 
     it("Happy Path: should record 3 votes", async() => {
+        
         partyArr = await saveInitialBalance(1,resolverContractAddress,rEsc)
         
+        ///@dev [votes], judge voting,counter,
         voteArr = [
             [[40,60],accounts[6],0],
             [[30,70],accounts[7],1],
@@ -127,11 +129,20 @@ contract("rentEscrow", async accounts => {
 
         }
         partyArr = await saveTerminalBalance(partyArr)
-        console.log(partyArr);
+
+        assert.equal(partyArr[0][3],319)
+        assert.equal(partyArr[1][3],649)
+        assert.equal(partyArr[2][3],132)
+
+
+        
 
     })
 
     it("Unhappy Path: non judge, multiple votes, not 100%",async () => {
+
+        partyArr = await saveInitialBalance(1,resolverContractAddress,rEsc)
+
         voteArr = [
             [[40,60],accounts[1],0,"Address not a judge"],
             [[40,60],accounts[6],0,"Judge Already voted"],
@@ -139,36 +150,17 @@ contract("rentEscrow", async accounts => {
             [[40,0],accounts[6],0,"Votes not 100"]]
         for (let vote of voteArr) {
             await expectRevert(resolver.castVote(vote[0], disputeId1, {from:vote[1]}),vote[3])
-            
-
         }
+        partyArr = await saveTerminalBalance(partyArr)
+
+         assert.equal(partyArr[0][3],0n)
+         //@custom:later this is not robust enough: we should see how much gas account[1] spent. And deduct it from balance. 
+         //assert.equal(partyArr[1][3],0n)
+         assert.equal(partyArr[2][3],0n)
+
 
     })
 
-    it("should test the transfer of funds to contract parties", async () => {
-        
-        
-        const rentContracts = await rEsc.rentContractsMapping([1])
-
-        
-        
-    })
-
-    // it("should create redeem proposal", async () => {
-    //     ///@dev Set the resolverAddress
-    //     console.log(resolverContractAddress);
-    //     await rEsc.setResolverAddress(resolverContractAddress)
-
-
-    //     ///@dev createRedeem proposal
-    //     receipt =  await resolver.triggerCreateRedeemProposal(disputeId1)
-    //     ///@dev check that this happened
-    //     const rentContracts = await rEsc.rentContractsMapping([1])
-    //     console.log(rentContracts.redeemProposal)
-    //     console.log(rentContracts)
-    //     balance = await web3.eth.getBalance(resolverContractAddress)
-    //     console.log(balance);
-
-    // })
+    
         
 })

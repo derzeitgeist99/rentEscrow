@@ -57,12 +57,12 @@ const createAndAccept = async (contract,landlord,tenant, escrow,detail) =>{
 const saveInitialBalance = async (_rentId,resolverContractAddress,rEsc) => {
     rentContract = await rEsc.rentContractsMapping([_rentId])
     
-        partyArr = [[rentContract.tenant,undefined,undefined,undefined],
-                    [rentContract.landlord,undefined,undefined,undefined ],
-                    [resolverContractAddress,undefined,undefined,undefined]]
+        partyArr = [[rentContract.tenant,undefined,undefined,undefined,undefined],
+                    [rentContract.landlord,undefined,undefined,undefined,undefined ],
+                    [resolverContractAddress,undefined,undefined,undefined,undefined]]
         
         for (let party of partyArr) {
-            party[1] = await web3.eth.getBalance(party[0])
+            party[1] = BigInt(await web3.eth.getBalance(party[0]))
         }
         return partyArr
 }
@@ -70,9 +70,8 @@ const saveInitialBalance = async (_rentId,resolverContractAddress,rEsc) => {
 const saveTerminalBalance = async (partyArr) => {
         
         for (let party of partyArr) {
-            party[2] = await web3.eth.getBalance(party[0])
-            party[3] = toBN(party[2]).minus(toBN(party[1]))
-            console.log(typeof toBN(party[2]))
+            party[2] = BigInt(await web3.eth.getBalance(party[0]))
+            party[3] = party[2] - party[1]
         }
         
         return partyArr
