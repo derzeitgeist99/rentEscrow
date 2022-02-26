@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/derzeitgeist99/rentEscrow#readme",
   "dependencies": {
-    "@openzeppelin/test-helpers": "^0.5.15"
+    "@openzeppelin/test-helpers": "^0.5.15",
+    "node-polyfill-webpack-plugin": "^1.1.4"
   }
 }

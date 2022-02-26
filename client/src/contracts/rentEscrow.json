@@ -75,7 +75,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -94,7 +95,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -113,7 +115,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -126,7 +129,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -202,7 +206,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -246,7 +251,8 @@
       "name": "acceptNewContract",
       "outputs": [],
       "stateMutability": "payable",
-      "type": "function"
+      "type": "function",
+      "payable": true
     },
     {
       "inputs": [
@@ -313,7 +319,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -390,7 +397,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -403,7 +411,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.10+commit.fc410830\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_rentId\",\"type\":\"uint256\"}],\"name\":\"rentContractId\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_message\",\"type\":\"address\"}],\"name\":\"sendAddressRent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_message\",\"type\":\"uint256\"}],\"name\":\"sendIdRent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_message\",\"type\":\"string\"}],\"name\":\"sendStringRent\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rentId\",\"type\":\"uint256\"}],\"name\":\"acceptNewContract\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rentId\",\"type\":\"uint256\"}],\"name\":\"acceptRedeemProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"addressMapping\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rentId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_tenantShare\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_landlordShare\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_feeShare\",\"type\":\"uint256\"}],\"name\":\"createRedeemProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"devGetBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getContractToResolve\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"rentId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"tenant\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"landlord\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"escrowValue\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"contractDetail\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"status\",\"type\":\"string\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"tenantShare\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"landlordShare\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"feeShare\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"feeAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"proposalStatus\",\"type\":\"uint256\"}],\"internalType\":\"struct rentEscrowInterface.RedeemProposal\",\"name\":\"redeemProposal\",\"type\":\"tuple\"}],\"internalType\":\"struct rentEscrowInterface.RentContract\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getContractsByAddress\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"importantAddresses\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"importantStrings\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nextRentId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_escrowValue\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_contractDetail\",\"type\":\"string\"}],\"name\":\"proposeNewContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_rentId\",\"type\":\"uint256\"}],\"name\":\"rejectRedeemProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"rentContractsMapping\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"rentId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"tenant\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"landlord\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"escrowValue\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"contractDetail\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"status\",\"type\":\"string\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"tenantShare\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"landlordShare\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"feeShare\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"feeAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"proposalStatus\",\"type\":\"uint256\"}],\"internalType\":\"struct rentEscrowInterface.RedeemProposal\",\"name\":\"redeemProposal\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_resolverAddress\",\"type\":\"address\"}],\"name\":\"setResolverAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"events\":{\"rentContractId(uint256)\":{\"details\":\"in order to give some feedback that rentcontract was created, we will emit its id. Later maybe be filled with some other\"},\"sendAddressRent(address)\":{\"custom:navigation\":\"Events\"}},\"kind\":\"dev\",\"methods\":{\"createRedeemProposal(uint256,uint256,uint256,uint256)\":{\"custom:navigation\":\"Redeems\"},\"devGetBalance()\":{\"custom:navigation\":\"Development Helpers\"},\"getContractToResolve()\":{\"custom:later\":\"now gives just first contract. Need to add logic to return contract where redeemProposal was rejected\",\"details\":\"this is used by retrieve mapping by another contract\"},\"proposeNewContract(uint256,string)\":{\"custom:navigation\":\"RentContracts\"},\"rejectRedeemProposal(uint256)\":{\"params\":{\"_rentId\":\"identifies the contract between tenant and landlord\"}},\"setResolverAddress(address)\":{\"details\":\"sets\"}},\"stateVariables\":{\"importantAddresses\":{\"details\":\"this contracf address is allowed to trigger redeem proposal creation\"},\"rentContractsMapping\":{\"custom:navigation\":\"Mappings\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"getContractsByAddress()\":{\"notice\":\"returns all contracts  where sender is involved party\"},\"rejectRedeemProposal(uint256)\":{\"notice\":\"Use this function to reject redeem proposal. Will send it to the resolution centre\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/rentEscrow.sol\":\"rentEscrow\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/rentEscrow.sol\":{\"keccak256\":\"0x95cb9b1aceac81a479e52945be5952df74ce108c440ab20dba3784befb40f3bd\",\"license\":\"CC-BY-4.0\",\"urls\":[\"bzz-raw://a3edfe93d83c57af17ed09f8eb938c0bd10e50086f15dc5287a6470746b31e33\",\"dweb:/ipfs/QmYJLshkHxxK7K1D7KfAz4DcJTjQzewEbu4XcPH3Ju6Huv\"]}},\"version\":1}",
@@ -28125,9 +28134,17 @@
     "name": "solc",
     "version": "0.8.10+commit.fc410830.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0x609aDb8c61C9d64Be8d6d5850fC680fd12B5f8CE",
+      "transactionHash": "0x00ea3b45f4f507625096fea340fed79af9b2d57fb0be94368c8da3018fd4a115"
+    }
+  },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2022-02-19T20:30:42.372Z",
+  "updatedAt": "2022-02-26T14:40:19.576Z",
+  "networkType": "ethereum",
   "devdoc": {
     "events": {
       "rentContractId(uint256)": {
