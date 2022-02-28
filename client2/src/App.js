@@ -1,32 +1,32 @@
 import React,{useEffect, useState} from "react"
 import logo from './logo.svg';
 import './App.css';
-// import {getWeb3, getRentContract} from "./utils.js"
+import {getWeb3, getRentContract} from "./utils.js"
 
 function App() {
-  // const [web3, setWeb3]  = useState(undefined)
-  // const [accounts, setAccounts]  = useState(undefined)
-  // const [rEsc, setrEsc]  = useState(undefined)
+  const [web3, setWeb3]  = useState(undefined)
+  const [accounts, setAccounts]  = useState(undefined)
+  const [rEsc, setrEsc]  = useState(undefined)
 
-  // useEffect(()=> {
-  //   const init = async() => {
-  //     const web3 = getWeb3();
-  //     const accounts = await web3.eth.getAccounts()
-  //     const rEsc = await getRentContract()
-  //     setWeb3(web3)
-  //     setAccounts(accounts)
-  //     setrEsc(rEsc)
-  //   }
-  //   init()
-  // },[])
+  useEffect(()=> {
+    const init = async() => {
+      const web3 = getWeb3();
+      const accounts = await web3.eth.getAccounts()
+      const rEsc = await getRentContract(web3)
+      setWeb3(web3)
+      setAccounts(accounts)
+      setrEsc(rEsc)
+    }
+    init()
+  },[])
 
-  // if (
-  //   typeof web3 === "undefined"
-  //   || typeof accounts === "undefined"
-  //   || typeof rEsc === "undefined"
-  // ) {
-  //   return <div className="">Loading</div>
-  // }
+  if (
+    typeof web3 === "undefined"
+    || typeof accounts === "undefined"
+    || typeof rEsc === "undefined"
+  ) {
+    return <div className="">Loading</div>
+  }
   
   return (
     // navbar
