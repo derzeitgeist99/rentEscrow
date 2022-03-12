@@ -5,7 +5,7 @@ import CreateRentContract from "./CreateRentContract.js"
 import ListContracts from "./ListContracts.js"
 import SearchContract from "./SearchContract";
 
-//collapse
+
 
 function App() {
   const [web3, setWeb3]  = useState(undefined)
