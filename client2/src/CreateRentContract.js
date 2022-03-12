@@ -1,13 +1,17 @@
 import React, {useState} from "react";
 
-function CreateRentContract ({submitRentContract,newContractId}) {
+function CreateRentContract ({submitRentContract,isUserLandlord,activeContract,currentAccount, acceptRentContract}) {
     const [newContract, setNewContract] = useState({escrowValue:1000, contractDetail:"yada"})
 
-    const handleSubmit = (event) => {
+    const handleCreateRentContract = (event) => {
         event.preventDefault()
-        submitRentContract(newContract)
-        
+        submitRentContract(newContract) 
+    }
 
+    const handleAcceptRentContract = (event) => {
+        event.preventDefault()
+        acceptRentContract(activeContract.rentId)
+        
     }
 
     const newContractUpdate = (event, field) => {
@@ -17,19 +21,29 @@ function CreateRentContract ({submitRentContract,newContractId}) {
     }
 
     return (
-        <div className="container bg-light p-5">            
-            <h4 className="">Create Rent Contract</h4>
-            <form onSubmit={event => handleSubmit(event)}>
+
+            <form>
             <div className="d-md-flex mb-3">
-                    <label className="form-label w-100" id="escrowvalue">Landlord</label>
-                    <input type="number" className="form-control" id="escrowvalue" placeholder="4d6f73742070656f706c65206" disabled/>
+                    <label className="form-label w-100" id="landlord">Landlord</label>
+                    <input type="number" className="form-control" id="landlord"
+                            placeholder={isUserLandlord ? currentAccount:activeContract.landlord}
+                            disabled/>
                 </div>
+            
+                <div className="d-md-flex mb-3">
+                    <label className="form-label w-100" id="tenant">Tenant</label>
+                    <input type="number" className="form-control" id="tenant"
+                            placeholder={isUserLandlord ? "TBD":currentAccount}
+                            disabled/>
+                </div>
+                {/* Bug: when user inputs something in the Landlord form, it remains visible. Should be overrriden by activeContract */}
                 <div className="d-md-flex mb-3">
                     <label className="form-label w-100" id="escrowvalue">Escrow Value (wei)</label>
                     <input type="number" 
                     className="form-control"
                     id="escrowvalue"
-                    placeholder = "10000"
+                    placeholder = {isUserLandlord ? "10000":activeContract.escrowValue}
+                    disabled = {isUserLandlord ? false:true}
                     onChange={event => newContractUpdate(event, "escrowValue")}/>
                 </div>
 
@@ -38,21 +52,36 @@ function CreateRentContract ({submitRentContract,newContractId}) {
                     <input type="http"
                     className="form-control"
                     id="contractdetail"
-                    placeholder="yada"
+                    placeholder={isUserLandlord ? "yada":activeContract.contractDetail}
+                    disabled = {isUserLandlord ? false:true}
                     onChange={event => newContractUpdate(event, "contractDetail")} />
                 </div>
 
                 <div className="d-flex flex-row-reverse align-items-center">
                     
-                    <button className="btn btn-dark" type="submit"> <i className="bi bi-arrow-right"></i> Create Rent Contract</button>
-                    
-                    <div className={`m-3 ${typeof newContractId === "undefined" ? "invisible":"visible"}`}>
-                        <p>Your new ContractId is: <mark>{newContractId}</mark></p>
-                    </div>
+                    {isUserLandlord &&
+                    <button 
+                        className="btn btn-dark"
+                        type="button"
+                        onClick={(e) => handleCreateRentContract(e)}
+                        > 
+                        <i className="bi bi-arrow-right"></i>Create Rent Contract
+                    </button>
+                    }
+
+                    {!isUserLandlord &&
+                    <button 
+                        className="btn btn-dark"
+                        type="button"
+                        onClick={(e) => handleAcceptRentContract(e)}
+                        disabled = {activeContract.rentId ? false:true}
+                        > 
+                        <i className="bi bi-arrow-right"></i>Accept Rent Contract: {activeContract.rentId}
+                    </button>
+                    }
                     
                 </div>
             </form>
-        </div>
     )
 }
 export default CreateRentContract;

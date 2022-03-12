@@ -9,7 +9,7 @@ interface rentEscrowInterface {
             address landlord;
             uint256 escrowValue;
             string contractDetail;
-            string status;
+            uint status; ///@dev 100 Proposed 200 Accepted by Tenant
             RedeemProposal redeemProposal;
         }
 
@@ -59,6 +59,7 @@ contract rentEscrow is rentEscrowInterface {
         myRentContract.landlord = msg.sender;
         myRentContract.escrowValue = _escrowValue;
         myRentContract.contractDetail = _contractDetail;
+        myRentContract.status = 100;
         
         rentContractsMapping[nextRentId] = myRentContract; //Later: Change to nextId to hashed ID
         updateAddressMapping(nextRentId);
@@ -70,8 +71,11 @@ contract rentEscrow is rentEscrowInterface {
 
     function acceptNewContract (uint _rentId) external payable{
         require(msg.value == rentContractsMapping[_rentId].escrowValue, "Eth sent is not same as escrowValue");
+        require(msg.sender != rentContractsMapping[_rentId].landlord, "Tenant and Landlord must not be same addresses");
+        require(200 != rentContractsMapping[_rentId].status, "Contract already accepted");
         
         rentContractsMapping[_rentId].tenant = msg.sender;
+        rentContractsMapping[_rentId].status = 200;
 
         updateAddressMapping(_rentId);
 
@@ -173,4 +177,8 @@ contract rentEscrow is rentEscrowInterface {
     return addressMapping[msg.sender];
 
         }
+    ///@notice returns RentContract
+    function getContractDetails (uint _rentId) external view returns (RentContract memory) {
+        return rentContractsMapping[_rentId];
+    }
 }

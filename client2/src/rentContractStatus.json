@@ -1,0 +1,7 @@
+{
+    "100": "Proposed",
+    "200": "Accepted by tenant",
+    "202": "Redemed via Dispute Resolution",
+    "301": "rejected by landlord",
+    "302": "rejected by tenant"
+}

@@ -1,8 +1,34 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
+import data from "./rentContractStatus.json"
 
-function ListContracts ({listContracts}) {
+
+function ListContracts ({listContracts, rEsc}) {
+
+    const [listOfContractDetails,setListOfContractDetails] = useState([])
+
+    useEffect(() =>{
+        // I dont know why I need the init() function
+        const init = async () =>{
+        // empty everything
+        let listOfContractDetails = []
+        setListOfContractDetails([])
+        
+        for (let id of listContracts) { 
+            let contractDetail = await rEsc.methods.rentContractsMapping(id).call()
+            listOfContractDetails.push({
+                rentId: contractDetail.rentId,
+                status: contractDetail.status,
+                landlord: contractDetail.landlord,
+                tenant: contractDetail.tenant})
+        }
+        setListOfContractDetails(listOfContractDetails)
+    }
+    init()
+    // This is dependency, I want to update everytime the ListContracts Change
+},[listContracts])
+
     
-    if (typeof listContracts == "undefined" || listContracts.length == 0) {
+    if (typeof listOfContractDetails == "undefined" || listOfContractDetails.length == 0) {
         return(
            <div className="container">
                <p className="text-center vh-40">
@@ -16,20 +42,27 @@ function ListContracts ({listContracts}) {
         )
         
 
-    }{console.log("tadaFalse")
-    return(
+    }
+
+       
+    return (
         
-        <ul className="list-group-flush">
-            {listContracts.map(contractId => 
-        <li className="list-group-item d-md-flex justify-content-between align-items-center">
-          <span className="badge bg-primary rounded-pill">Redeem Proposal Waiting</span>
-          <p className="text-left m-3">{"tada"}</p>
-          <a href="#" className="btn btn-small btn-secondary text left">Accept</a>
+    
+        <ul className="list-group-flush overflow-scroll" style={{height: 300}} >
+            {listOfContractDetails.map( contractDetail => 
+
+        <li className="list-group-item d-md-flex justify-content-between align-items-center"
+            key = {contractDetail.rentId+contractDetail.landlord}>
+          <span className="badge bg-primary rounded-pill">{data[contractDetail.status]}</span>
+          <p className="text-left">{"Contract Id "+  contractDetail.rentId}</p>
+          <a href="#" className="btn btn-small btn-secondary">Accept</a>
         </li>
+
          )} 
       </ul>
+
     )
-            }
+            
 
 }
 
