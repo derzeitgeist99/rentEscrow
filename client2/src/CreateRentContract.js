@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 
-function CreateRentContract ({submitRentContract,isUserLandlord,activeContract,currentAccount, acceptRentContract}) {
+function CreateRentContract ({submitRentContract,flowStep,activeContract,currentAccount, acceptRentContract}) {
     const [newContract, setNewContract] = useState({escrowValue:1000, contractDetail:"yada"})
 
     const handleCreateRentContract = (event) => {
@@ -26,14 +26,14 @@ function CreateRentContract ({submitRentContract,isUserLandlord,activeContract,c
             <div className="d-md-flex mb-3">
                     <label className="form-label w-100" id="landlord">Landlord</label>
                     <input type="number" className="form-control" id="landlord"
-                            placeholder={isUserLandlord ? currentAccount:activeContract.landlord}
+                            placeholder={flowStep === 0 ? currentAccount:activeContract.landlord}
                             disabled/>
                 </div>
             
                 <div className="d-md-flex mb-3">
                     <label className="form-label w-100" id="tenant">Tenant</label>
                     <input type="number" className="form-control" id="tenant"
-                            placeholder={isUserLandlord ? "TBD":currentAccount}
+                            placeholder={flowStep === 0 ? "TBD":currentAccount}
                             disabled/>
                 </div>
                 {/* Bug: when user inputs something in the Landlord form, it remains visible. Should be overrriden by activeContract */}
@@ -42,8 +42,8 @@ function CreateRentContract ({submitRentContract,isUserLandlord,activeContract,c
                     <input type="number" 
                     className="form-control"
                     id="escrowvalue"
-                    placeholder = {isUserLandlord ? "10000":activeContract.escrowValue}
-                    disabled = {isUserLandlord ? false:true}
+                    placeholder = {flowStep === 0 ? "Enter":activeContract.escrowValue}
+                    disabled = {flowStep === 0 ? false:true}
                     onChange={event => newContractUpdate(event, "escrowValue")}/>
                 </div>
 
@@ -52,14 +52,14 @@ function CreateRentContract ({submitRentContract,isUserLandlord,activeContract,c
                     <input type="http"
                     className="form-control"
                     id="contractdetail"
-                    placeholder={isUserLandlord ? "yada":activeContract.contractDetail}
-                    disabled = {isUserLandlord ? false:true}
+                    placeholder={flowStep === 0 ? "Enter":activeContract.contractDetail}
+                    disabled = {flowStep === 0 ? false:true}
                     onChange={event => newContractUpdate(event, "contractDetail")} />
                 </div>
 
                 <div className="d-flex flex-row-reverse align-items-center">
                     
-                    {isUserLandlord &&
+                    {flowStep === 0 &&
                     <button 
                         className="btn btn-dark"
                         type="button"
@@ -69,7 +69,7 @@ function CreateRentContract ({submitRentContract,isUserLandlord,activeContract,c
                     </button>
                     }
 
-                    {!isUserLandlord &&
+                    {flowStep === 1 &&
                     <button 
                         className="btn btn-dark"
                         type="button"

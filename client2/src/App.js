@@ -13,7 +13,7 @@ function App() {
   const [rEsc, setrEsc]  = useState(undefined)
   const [currentAccount, setCurrentAccount]  = useState(undefined)
   const [listContracts, setListContracts]  = useState([])
-  const [isUserLandlord, setIsUserLandlord]  = useState(true)
+  const [flowStep, setFlowStep]  = useState(0)
   const [activeContract, setActiveContract]  = useState(undefined)
   const [activeContractId, setActiveContractId]  = useState(undefined)
 
@@ -48,9 +48,19 @@ function App() {
   init()
   },[currentAccount])
 
-  const handleLandlordChange = () => {
-    setIsUserLandlord(!isUserLandlord)
-    isUserLandlord ? setCurrentAccount(accounts[0]):setCurrentAccount(accounts[1])
+  const handleAddressChange = () => {
+
+    switch (currentAccount) {
+      case accounts[0]:
+        setCurrentAccount(accounts[1])
+        break
+      case accounts[1]:
+        setCurrentAccount(accounts[0])
+        break
+      default:
+        setCurrentAccount(accounts[1])
+    }
+    
 
   }
 
@@ -102,22 +112,22 @@ function App() {
        
           <div className="">
             <h3 className="text-center">Rent Escrow Center</h3>
-          <button className="btn btn-primary" onClick = {() => handleLandlordChange()}>{`${currentAccount} is Landlord: ${isUserLandlord}`}</button>
+          <button className="btn btn-primary" onClick = {() => handleAddressChange()}><span role="img" aria-label="fox">🦊 </span>{currentAccount}</button>
             <p className="lead">Here you can manage your rent escrow proposal.
             As a <span className="fw-bold">Landlord</span> you can create rent contracts or redeemProposal. As a <span className="fw-bold">Tenant</span> you can accept both. </p>
             {/* Listing contracts */}
             <ListContracts listContracts = {listContracts} rEsc = {rEsc}></ListContracts>
             <div className="d-md-flex align-items-center justify-content-between">
-              <button className="btn btn-primary" onClick={()=> setIsUserLandlord(true)}>
+              <button className={flowStep ===0 ? "btn btn-secondary":"btn btn-primary"} onClick={()=> setFlowStep(0)}>
                 Landlord: Create new Rent Contract
               </button>
-              <button className="btn btn-primary" onClick={()=> setIsUserLandlord(false)}>
+              <button className={flowStep ===1 ? "btn btn-secondary":"btn btn-primary"} onClick={()=> setFlowStep(1)}>
                 Tenant: Accept rent Contract
             </button>
-            <button className="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#accept" >
+            <button className={flowStep ===2 ? "btn btn-secondary":"btn btn-primary"} onClick={()=> setFlowStep(2)} >
                 Landlord: Create Redeem
             </button>
-            <button className="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#accept" >
+            <button className={flowStep ===3 ? "btn btn-secondary":"btn btn-primary"} onClick={()=> setFlowStep(3)}>
                 Tenant: Accept Redeem
             </button>
 
@@ -126,16 +136,17 @@ function App() {
               <div className="container bg-light p-5">      
             <h4 className="">Rent Contract Details</h4>
             {/* This is visible only for Tenants */}
-            {!isUserLandlord &&
+
             <SearchContract
+            flowStep = {flowStep}
             setActiveContractId = {setActiveContractId}
             getContractDetail = {getContractDetail}
             activeContractId = {activeContractId}>
             </SearchContract>
-            }
+            
             <CreateRentContract 
               submitRentContract = {submitRentContract} 
-              isUserLandlord = {isUserLandlord}
+              flowStep = {flowStep}
               getContractDetail = {getContractDetail}
               activeContract = {activeContract}
               currentAccount = {currentAccount}
