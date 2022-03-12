@@ -10,7 +10,6 @@ function App() {
   const [accounts, setAccounts]  = useState(undefined)
   const [rEsc, setrEsc]  = useState(undefined)
   const [currentAccount, setCurrentAccount]  = useState(undefined)
-  const [newContractId, setNewContractId]  = useState(undefined)
   const [listContracts, setListContracts]  = useState([])
   const [isUserLandlord, setIsUserLandlord]  = useState(true)
   const [activeContract, setActiveContract]  = useState(undefined)
@@ -43,7 +42,6 @@ function App() {
   useEffect(() => {
     const init = async () => {
       rEsc&& await setListContracts(await rEsc.methods.getContractsByAddress().call({from: currentAccount}))
-    console.log("I am here")
      }
   init()
   },[currentAccount])
@@ -55,11 +53,10 @@ function App() {
   }
 
   const submitRentContract = async  (newContract) => {
-    const receipt = await rEsc.methods
+    await rEsc.methods
     .proposeNewContract(newContract["escrowValue"],newContract["contractDetail"])
     .send({from: currentAccount,gas: 1000000})
     
-    //await setNewContractId(receipt["events"]["rentContractId"]["returnValues"]["_rentId"])
     setListContracts(await rEsc.methods.getContractsByAddress().call({from: currentAccount}))
 
   }
@@ -71,9 +68,11 @@ function App() {
   }
 
   const acceptRentContract = async (rentId) => {
-    const receipt = await rEsc.methods
+    await rEsc.methods
     .acceptNewContract(rentId)
-    .send({from: currentAccount,value: 1000, gas: 1000000})
+    .send({from: currentAccount,value: Number(activeContract.escrowValue), gas: 1000000})
+
+    setListContracts(await rEsc.methods.getContractsByAddress().call({from: currentAccount}))
   }
 
 
@@ -91,14 +90,14 @@ function App() {
     <div className="">
     <nav className="navbar navbar-expand-lg bg-dark py-3 fixed-top">
       <div className="container">
-        <a href="#" className="navbar-brand text-secondary">RentEscrow the App</a>
+        <span className="navbar-brand text-secondary">RentEscrow the App</span>
       </div>
     </nav>
 
     //Main box
     <section className="p-5">
-      <div className="container">
-        <div className="d-md-flex align-items-top justify-content-between">
+      <div className="container mb-5">
+       
           <div className="">
             <h3 className="text-center">Rent Escrow Center</h3>
           <button className="btn btn-primary" onClick = {() => handleLandlordChange()}>{`${currentAccount} is Landlord: ${isUserLandlord}`}</button>
@@ -107,10 +106,10 @@ function App() {
             {/* Listing contracts */}
             <ListContracts listContracts = {listContracts} rEsc = {rEsc}></ListContracts>
             <div className="d-md-flex align-items-center justify-content-between">
-              <button className="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#createAccept"  onClick={()=> setIsUserLandlord(true)}>
+              <button className="btn btn-primary" onClick={()=> setIsUserLandlord(true)}>
                 Landlord: Create new Rent Contract
               </button>
-              <button className="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#createAccept" onClick={()=> setIsUserLandlord(false)}>
+              <button className="btn btn-primary" onClick={()=> setIsUserLandlord(false)}>
                 Tenant: Accept rent Contract
             </button>
             <button className="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#accept" >
@@ -121,7 +120,7 @@ function App() {
             </button>
 
             </div>
-            <div className="collapse" id="createAccept">
+            
               <div className="container bg-light p-5">      
             <h4 className="">Rent Contract Details</h4>
             {/* This is visible only for Tenants */}
@@ -141,16 +140,17 @@ function App() {
               acceptRentContract = {acceptRentContract}>
               </CreateRentContract>
               </div>
-              </div>
+        
             
 
           </div>
-          <div className="">
-            <h3 className="">Dispute Resolution Center</h3>
+        </div>
+          <div className="container">
+            <h3 className="text-center">Dispute Resolution Center</h3>
           </div>
 
-        </div>
-      </div>
+      
+  
 
     </section>
 </div>

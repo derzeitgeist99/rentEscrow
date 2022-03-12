@@ -76,7 +76,7 @@ function CreateRentContract ({submitRentContract,isUserLandlord,activeContract,c
                         onClick={(e) => handleAcceptRentContract(e)}
                         disabled = {activeContract.rentId ? false:true}
                         > 
-                        <i className="bi bi-arrow-right"></i>Accept Rent Contract: {activeContract.rentId}
+                        <i className="bi bi-arrow-right"></i>Accept Rent Contract: {activeContract.rentId} and deposit {activeContract.escrowValue} wei
                     </button>
                     }
                     

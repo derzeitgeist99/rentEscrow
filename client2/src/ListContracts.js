@@ -28,7 +28,7 @@ function ListContracts ({listContracts, rEsc}) {
 },[listContracts])
 
     
-    if (typeof listOfContractDetails == "undefined" || listOfContractDetails.length == 0) {
+    if (typeof listOfContractDetails === "undefined" || listOfContractDetails.length === 0) {
         return(
            <div className="container">
                <p className="text-center vh-40">
