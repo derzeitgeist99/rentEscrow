@@ -20,7 +20,11 @@ function CreateRentContract ({submitRentContract,flowStep,activeContract,current
 
     }
 
+
+
     return (
+        <div className="">
+        <h4 className="">Create / Edit Rent Contract as Landlord / Tenant</h4>
 
             <form>
             <div className="d-md-flex mb-3">
@@ -57,6 +61,7 @@ function CreateRentContract ({submitRentContract,flowStep,activeContract,current
                     onChange={event => newContractUpdate(event, "contractDetail")} />
                 </div>
 
+
                 <div className="d-flex flex-row-reverse align-items-center">
                     
                     {flowStep === 0 &&
@@ -82,6 +87,7 @@ function CreateRentContract ({submitRentContract,flowStep,activeContract,current
                     
                 </div>
             </form>
+         </div>
     )
 }
 export default CreateRentContract;

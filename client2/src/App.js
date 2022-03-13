@@ -4,6 +4,7 @@ import {getWeb3, getRentContract} from "./utils.js"
 import CreateRentContract from "./CreateRentContract.js"
 import ListContracts from "./ListContracts.js"
 import SearchContract from "./SearchContract";
+import CreateAcceptRedeem from "./createAcceptRedeem";
 
 
 
@@ -21,7 +22,15 @@ function App() {
     "landlord": "Search for valid contract", 
     "escrowValue":"Search for valid contract",
     "contractDetail":"Search for valid contract",
-    "status":"Search for valid contract"}
+    "status":"Search for valid contract",
+    "redeemProposal": {
+      "tenantShare":"Search for valid contract",
+      "landlordShare":"Search for valid contract",
+      "feeShare":"Search for valid contract",
+      "feeAddress":"Search for valid contract",
+      "proposalStatus":"Search for valid contract",
+      
+    }}
 
     // this is initial load only
   useEffect(()=> {
@@ -63,7 +72,7 @@ function App() {
     
 
   }
-
+//passing whole object seems less readable?
   const submitRentContract = async  (newContract) => {
     await rEsc.methods
     .proposeNewContract(newContract["escrowValue"],newContract["contractDetail"])
@@ -85,6 +94,12 @@ function App() {
     .send({from: currentAccount,value: Number(activeContract.escrowValue), gas: 1000000})
 
     setListContracts(await rEsc.methods.getContractsByAddress().call({from: currentAccount}))
+  }
+
+  const createRedeemProposal = async (rentId,tenantShare,landlordShare,feeShare) => {
+    await rEsc.methods
+    .createRedeemProposal(rentId,tenantShare,landlordShare,feeShare)
+    .send({from: currentAccount,gas: 1000000})
   }
 
 
@@ -134,9 +149,7 @@ function App() {
             </div>
             
               <div className="container bg-light p-5">      
-            <h4 className="">Rent Contract Details</h4>
-            {/* This is visible only for Tenants */}
-
+            
             <SearchContract
             flowStep = {flowStep}
             setActiveContractId = {setActiveContractId}
@@ -152,6 +165,15 @@ function App() {
               currentAccount = {currentAccount}
               acceptRentContract = {acceptRentContract}>
               </CreateRentContract>
+            { (flowStep === 2 || flowStep === 3)  &&
+            <CreateAcceptRedeem
+              flowStep = {flowStep}
+              activeContract = {activeContract}
+              createRedeemProposal = {createRedeemProposal}
+              >
+            </CreateAcceptRedeem>
+            }
+
               </div>
         
             
