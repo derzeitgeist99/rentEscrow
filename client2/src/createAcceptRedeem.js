@@ -8,7 +8,7 @@ function CreateAcceptRedeem ({flowStep,activeContract,currentAccount,createRedee
         event.preventDefault()
         setEscrowDistributionPct({"landlord":event.target.value, "tenant": 100-event.target.value})
         let escrowValue = Number(activeContract.escrowValue)
-        escrowValue != "NaN" && setEscrowDistributionAbs({"landlord":event.target.value * escrowValue, "tenant": (100-event.target.value) * escrowValue })
+        escrowValue != "NaN" && setEscrowDistributionAbs({"landlord":event.target.value * escrowValue/100, "tenant": (100-event.target.value) * escrowValue/100 })
 
     }
 

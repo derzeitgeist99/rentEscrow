@@ -28,7 +28,6 @@ function App() {
       "landlordShare":"Search for valid contract",
       "feeShare":"Search for valid contract",
       "feeAddress":"Search for valid contract",
-      "proposalStatus":"Search for valid contract",
       
     }}
 
@@ -130,9 +129,19 @@ function App() {
           <button className="btn btn-primary" onClick = {() => handleAddressChange()}><span role="img" aria-label="fox">🦊 </span>{currentAccount}</button>
             <p className="lead">Here you can manage your rent escrow proposal.
             As a <span className="fw-bold">Landlord</span> you can create rent contracts or redeemProposal. As a <span className="fw-bold">Tenant</span> you can accept both. </p>
+
             {/* Listing contracts */}
-            <ListContracts listContracts = {listContracts} rEsc = {rEsc}></ListContracts>
-            <div className="d-md-flex align-items-center justify-content-between">
+            <ListContracts
+              listContracts = {listContracts} 
+              rEsc = {rEsc}
+              currentAccount = {currentAccount}></ListContracts>
+            <SearchContract
+            flowStep = {flowStep}
+            setActiveContractId = {setActiveContractId}
+            getContractDetail = {getContractDetail}
+            activeContractId = {activeContractId}>
+            </SearchContract>
+            <div className="d-md-flex align-items-center justify-content-between mb-3">
               <button className={flowStep ===0 ? "btn btn-secondary":"btn btn-primary"} onClick={()=> setFlowStep(0)}>
                 Landlord: Create new Rent Contract
               </button>
@@ -147,15 +156,10 @@ function App() {
             </button>
 
             </div>
+
             
               <div className="container bg-light p-5">      
             
-            <SearchContract
-            flowStep = {flowStep}
-            setActiveContractId = {setActiveContractId}
-            getContractDetail = {getContractDetail}
-            activeContractId = {activeContractId}>
-            </SearchContract>
             
             <CreateRentContract 
               submitRentContract = {submitRentContract} 

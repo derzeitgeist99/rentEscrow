@@ -9,7 +9,7 @@ interface rentEscrowInterface {
             address landlord;
             uint256 escrowValue;
             string contractDetail;
-            uint status; ///@dev 100 Proposed 200 Accepted by Tenant
+            uint status; ///@dev 100 Proposed; 200 Accepted by Tenant; 300 Redeem Proposal created; 400 Escrow Redeemed
             RedeemProposal redeemProposal;
         }
 
@@ -18,7 +18,6 @@ interface rentEscrowInterface {
         uint landlordShare;
         uint feeShare;
         address feeAddress;
-        uint proposalStatus; /// @dev 100 Proposed 200 Redeemed by tenant 202 Redemed via Dispute Resolution 301 rejected by landlord 302 rejected by tenant
     }
 
     function getContractToResolve () external view returns (RentContract memory);
@@ -95,7 +94,7 @@ contract rentEscrow is rentEscrowInterface {
         rentContractsMapping[_rentId].redeemProposal.feeShare = _feeShare;
         //Later: fee address must be protected
         rentContractsMapping[_rentId].redeemProposal.feeAddress = importantAddresses["ResolverAddress"];
-        rentContractsMapping[_rentId].redeemProposal.proposalStatus = 100;
+        rentContractsMapping[_rentId].status = 300;
     
     }
 
@@ -121,9 +120,9 @@ contract rentEscrow is rentEscrowInterface {
         //values to send must equal to escrowValue
         require((escrowTenant + escrowLandlord + fee) == escrowValue, "TenantShare + Landlord Share + Fee Share does not equal Escrow Value");
 
-        // status must be 100 (proposed), to avoid double dip
-        require(rentContractsMapping[_rentId].redeemProposal.proposalStatus == 100, "Escrow has been alread redeemed.");
-        rentContractsMapping[_rentId].redeemProposal.proposalStatus = 200;
+        // status must be 300 (proposed), to avoid double dip
+        require(rentContractsMapping[_rentId].status == 300, "Escrow status must be 300");
+        rentContractsMapping[_rentId].status = 400;
 
         //Later: would it make sense to stop any redemptions in case sum of individual escrows is below total balance ???
         
@@ -140,21 +139,11 @@ contract rentEscrow is rentEscrowInterface {
         ///@dev UX has a say here, currently tenant and landlord can reject at any time
         require((msg.sender ==  rentContractsMapping[_rentId].tenant || msg.sender == rentContractsMapping[_rentId].landlord), "Only tenant or landlord can accept redeem proposal");
         
-        ///@custom:later probably better to re-write to allowed statuses
-        require(
-            rentContractsMapping[_rentId].redeemProposal.proposalStatus != 301 &&
-            rentContractsMapping[_rentId].redeemProposal.proposalStatus != 302,"Already rejected");
-        require(rentContractsMapping[_rentId].redeemProposal.proposalStatus != (200),"Already accepted" );
+        require(rentContractsMapping[_rentId].status == 300, "Already rejected or accepted");
 
-        if(msg.sender == rentContractsMapping[_rentId].landlord) {
-            rentContractsMapping[_rentId].redeemProposal.proposalStatus = 301;
-        }
-        else if (msg.sender == rentContractsMapping[_rentId].tenant){
-             rentContractsMapping[_rentId].redeemProposal.proposalStatus = 302;
+        rentContractsMapping[_rentId].status = 200;
 
         }
-
-    }
  
 ///@custom:navigation Development Helpers
     function devGetBalance () external view returns(uint){

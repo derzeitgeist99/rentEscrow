@@ -17,14 +17,14 @@ function SearchContract ({getContractDetail,setActiveContractId,activeContractId
     <form  className=""
     onSubmit={event => handleSearchContract(event)}>
 <div className="d-md-flex mb-3">
-    <label className="form-label w-100" id="rentId">RentId</label>
+   
     <input  className = "form-control"
             id="rentId"
             onChange={event => handleChange(event)}
-            disabled = {flowStep ===0 ? true:false}/>
+            />
     <button className="btn btn-secondary"
             type="submit"
-            disabled = {flowStep ===0 ? true:false} >Search Contract</button>
+             >Search Contract</button>
 </div>
 </form>
     )
