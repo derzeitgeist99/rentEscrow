@@ -1,7 +1,16 @@
-{
-    "100": ["Proposed",1,"Accept"],
-    "200": ["Accepted by tenant",2,"Create Redeem Proposal"],
-    "300": ["Redeem Proposal created",3, "Accept or Cancel Redeem Proposal"],
-    "400": ["400 Escrow Redeemed",0,"Case Closed"]
+{ "Documentation_current status": {"status": "Proposed",
+    "in case user is a **tenant**:":["which flow step to activate","label" ],
+    "in case user is a **landlord**:":["which flow step to activate","label" ]},
+    "100": {"status": "Proposed",
+        "tenant":[1,"Accept"],
+        "landlord":[0, "Wait"]},
+    "200": {"status": "Accepted by tenant",
+        "tenant":[1,"Wait"],
+        "landlord":[2, "Create Redeem Proposal"]},
+    "300": {"status": "Redeem Proposal created",
+        "tenant":[3,"Accept or Cancel Redeem Proposal"],
+        "landlord":[2, "Wait"]},
+    "400": {"status": "Escrow Redeemed",
+        "tenant":[3,"Case Closed"],
+        "landlord":[3, "Case Closed"]}
 }
-

@@ -1,8 +1,0 @@
-{
-    "100": {"status": "Proposed",
-        "tenant":[1,"Accept"],
-        "landlord":[0, "Wait"]},
-    "200": ["Accepted by tenant",2,"Create Redeem Proposal"],
-    "300": ["Redeem Proposal created",3, "Accept or Cancel Redeem Proposal"],
-    "400": ["400 Escrow Redeemed",0,"Case Closed"]
-}

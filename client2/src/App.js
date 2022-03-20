@@ -52,6 +52,7 @@ function App() {
   useEffect(() => {
     const init = async () => {
       rEsc&& await setListContracts(await rEsc.methods.getContractsByAddress().call({from: currentAccount}))
+      rEsc && activeContractId && getContractDetail(activeContractId)
      }
   init()
   },[currentAccount])
@@ -71,7 +72,7 @@ function App() {
     
 
   }
-//passing whole object seems less readable?
+//passing whole object seems less readable? But function has less arguments? Case for OOP?
   const submitRentContract = async  (newContract) => {
     await rEsc.methods
     .proposeNewContract(newContract["escrowValue"],newContract["contractDetail"])
@@ -99,6 +100,8 @@ function App() {
     await rEsc.methods
     .createRedeemProposal(rentId,tenantShare,landlordShare,feeShare)
     .send({from: currentAccount,gas: 1000000})
+  
+    setListContracts(await rEsc.methods.getContractsByAddress().call({from: currentAccount}))
   }
 
 
@@ -134,7 +137,10 @@ function App() {
             <ListContracts
               listContracts = {listContracts} 
               rEsc = {rEsc}
-              currentAccount = {currentAccount}></ListContracts>
+              currentAccount = {currentAccount}
+              setFlowStep = {setFlowStep}
+              getContractDetail = {getContractDetail}>
+            </ListContracts>
             <SearchContract
             flowStep = {flowStep}
             setActiveContractId = {setActiveContractId}
@@ -174,6 +180,7 @@ function App() {
               flowStep = {flowStep}
               activeContract = {activeContract}
               createRedeemProposal = {createRedeemProposal}
+              currentAccount = {currentAccount}
               >
             </CreateAcceptRedeem>
             }
