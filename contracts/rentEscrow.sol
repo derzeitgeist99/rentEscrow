@@ -9,7 +9,7 @@ interface rentEscrowInterface {
             address landlord;
             uint256 escrowValue;
             string contractDetail;
-            uint status; ///@dev 100 Proposed; 200 Accepted by Tenant; 300 Redeem Proposal created; 400 Escrow Redeemed
+            uint status; ///@dev 100 Proposed; 200 Accepted by Tenant; 300 Redeem Proposal created; 310 Dispute Redeem; 400 Escrow Redeemed
             RedeemProposal redeemProposal;
         }
 
@@ -142,6 +142,16 @@ contract rentEscrow is rentEscrowInterface {
         require(rentContractsMapping[_rentId].status == 300, "Already rejected or accepted");
 
         rentContractsMapping[_rentId].status = 200;
+
+        }
+
+    function disputeRedeemProposal(uint _rentId) external {
+        ///@dev UX has a say here, currently tenant and landlord can dispute at any time
+        require((msg.sender ==  rentContractsMapping[_rentId].tenant || msg.sender == rentContractsMapping[_rentId].landlord), "Only tenant or landlord can accept redeem proposal");
+        
+        require(rentContractsMapping[_rentId].status == 300, "Already rejected or accepted");
+
+        rentContractsMapping[_rentId].status = 310;
 
         }
  

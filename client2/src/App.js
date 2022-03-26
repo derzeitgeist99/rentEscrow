@@ -96,13 +96,7 @@ function App() {
     setListContracts(await rEsc.methods.getContractsByAddress().call({from: currentAccount}))
   }
 
-  const createRedeemProposal = async (rentId,tenantShare,landlordShare,feeShare) => {
-    await rEsc.methods
-    .createRedeemProposal(rentId,tenantShare,landlordShare,feeShare)
-    .send({from: currentAccount,gas: 1000000})
-  
-    setListContracts(await rEsc.methods.getContractsByAddress().call({from: currentAccount}))
-  }
+
 
 
 
@@ -141,23 +135,29 @@ function App() {
               setFlowStep = {setFlowStep}
               getContractDetail = {getContractDetail}>
             </ListContracts>
-            <SearchContract
-            flowStep = {flowStep}
-            setActiveContractId = {setActiveContractId}
-            getContractDetail = {getContractDetail}
-            activeContractId = {activeContractId}>
-            </SearchContract>
+            <div className="d-md-flex">
+              <button className = "btn btn-small btn-secondary" onClick={()=> setFlowStep(0)}>
+              Create New Contract
+              </button>
+              <SearchContract
+              setFlowStep = {setFlowStep}
+              setActiveContractId = {setActiveContractId}
+              getContractDetail = {getContractDetail}
+              activeContractId = {activeContractId}>
+              </SearchContract>
+            </div>
+
             <div className="d-md-flex align-items-center justify-content-between mb-3">
-              <button className={flowStep ===0 ? "btn btn-secondary":"btn btn-primary"} onClick={()=> setFlowStep(0)}>
+              <button className={flowStep ===0 ? "btn btn-secondary":"btn btn-primary"} >
                 Landlord: Create new Rent Contract
               </button>
-              <button className={flowStep ===1 ? "btn btn-secondary":"btn btn-primary"} onClick={()=> setFlowStep(1)}>
+              <button className={flowStep ===1 ? "btn btn-secondary":"btn btn-primary"}>
                 Tenant: Accept rent Contract
             </button>
-            <button className={flowStep ===2 ? "btn btn-secondary":"btn btn-primary"} onClick={()=> setFlowStep(2)} >
+            <button className={flowStep ===2 ? "btn btn-secondary":"btn btn-primary"} >
                 Landlord: Create Redeem
             </button>
-            <button className={flowStep ===3 ? "btn btn-secondary":"btn btn-primary"} onClick={()=> setFlowStep(3)}>
+            <button className={flowStep ===3 ? "btn btn-secondary":"btn btn-primary"} >
                 Tenant: Accept Redeem
             </button>
 
@@ -179,8 +179,8 @@ function App() {
             <CreateAcceptRedeem
               flowStep = {flowStep}
               activeContract = {activeContract}
-              createRedeemProposal = {createRedeemProposal}
               currentAccount = {currentAccount}
+              rEsc = {rEsc}
               >
             </CreateAcceptRedeem>
             }

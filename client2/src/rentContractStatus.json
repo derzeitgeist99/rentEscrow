@@ -8,8 +8,11 @@
         "tenant":[1,"Wait"],
         "landlord":[2, "Create Redeem Proposal"]},
     "300": {"status": "Redeem Proposal created",
-        "tenant":[3,"Accept or Cancel Redeem Proposal"],
+        "tenant":[3,"Accept or Reject Redeem Proposal"],
         "landlord":[2, "Wait"]},
+    "310": {"status": "Dispute case created",
+        "tenant":[3,"Wait for resolution"],
+        "landlord":[2, "Wait for resolution"]},
     "400": {"status": "Escrow Redeemed",
         "tenant":[3,"Case Closed"],
         "landlord":[3, "Case Closed"]}

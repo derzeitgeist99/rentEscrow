@@ -1,6 +1,12 @@
 import React,{useEffect, useState} from "react";
 
-function CreateAcceptRedeem ({flowStep,activeContract,currentAccount,createRedeemProposal}) {
+import CreateRedeemButton from"./createRedeemProposalButtons/CreateRedeemProposalButton.js"
+import RejectRedeemProposalButton from"./createRedeemProposalButtons/RejectRedeemProposalButton.js"
+import AcceptRedeemProposalButton from"./createRedeemProposalButtons/AcceptRedeemProposalButton.js"
+import DisputeRedeemProposal from"./createRedeemProposalButtons/DisputeRedeemProposalButton.js"
+
+
+function CreateAcceptRedeem ({flowStep,activeContract,currentAccount,rEsc}) {
     const [escrowDistributionPct, setEscrowDistributionPct] = useState({"landlord":0,"tenant":100})
     const [escrowDistributionAbs, setEscrowDistributionAbs] = useState({"landlord":0,"tenant":0})
     const [isSliderDisabled, setIsSliderDisabled] = useState(true)
@@ -13,7 +19,6 @@ function CreateAcceptRedeem ({flowStep,activeContract,currentAccount,createRedee
         })
         // only case when you cab manipulate with slider is whne you are landlord and status is 200. 
         setIsSliderDisabled(true)
-        console.log(activeContract.status === "200");
         if (activeContract.landlord === currentAccount && activeContract.status === "200") {
             setIsSliderDisabled(false)
         }
@@ -28,10 +33,7 @@ function CreateAcceptRedeem ({flowStep,activeContract,currentAccount,createRedee
 
     }
 
-    const handleCreateRedeemProposal = (event) => {
-        event.preventDefault()
-        createRedeemProposal(activeContract.rentId,escrowDistributionPct.tenant,escrowDistributionPct.landlord,0) 
-    }
+
 
 
 
@@ -53,14 +55,32 @@ function CreateAcceptRedeem ({flowStep,activeContract,currentAccount,createRedee
         </div>
         <p>Landlord gets {escrowDistributionPct.landlord}% which is {escrowDistributionAbs.landlord}Wei</p>
         <p>Tenant gets {escrowDistributionPct.tenant}% which is {escrowDistributionAbs.tenant}Wei</p>
-        <button 
-            className="btn btn-dark"
-            type="button"
-            onClick={(event) => handleCreateRedeemProposal(event)}
-            disabled = {activeContract.rentId ? false:true}
-            > 
-            <i className="bi bi-arrow-right"></i>Create Redeem Proposal
-            </button>
+
+        <CreateRedeemButton
+            activeContract = {activeContract}
+            escrowDistributionPct = {escrowDistributionPct}
+            rEsc = {rEsc}
+            currentAccount = {currentAccount}
+            >
+            </CreateRedeemButton>
+        <AcceptRedeemProposalButton
+            activeContract = {activeContract}
+            rEsc = {rEsc}
+            currentAccount = {currentAccount}
+            >
+            </AcceptRedeemProposalButton>
+
+        <RejectRedeemProposalButton
+            activeContract = {activeContract}
+            rEsc = {rEsc}
+            currentAccount = {currentAccount}>
+            </RejectRedeemProposalButton>
+        <DisputeRedeemProposal
+        activeContract = {activeContract}
+        rEsc = {rEsc}
+        currentAccount = {currentAccount}>
+        </DisputeRedeemProposal>
+
 
     </div>
 

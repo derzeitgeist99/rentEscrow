@@ -1,11 +1,12 @@
 import React from "react";
 
-function SearchContract ({getContractDetail,setActiveContractId,activeContractId, flowStep}) {
+function SearchContract ({getContractDetail,setActiveContractId,activeContractId, setFlowStep}) {
 
 
     const handleSearchContract = (event) => {
         event.preventDefault()
         getContractDetail(activeContractId)
+        setFlowStep(1)
     }
 
     const handleChange = (event) => {
@@ -24,7 +25,7 @@ function SearchContract ({getContractDetail,setActiveContractId,activeContractId
             />
     <button className="btn btn-secondary"
             type="submit"
-             >Search Contract</button>
+             >Search Contract to Accept</button>
 </div>
 </form>
     )
