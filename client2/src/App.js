@@ -1,10 +1,12 @@
 import React,{useEffect, useState} from "react"
 import './App.css';
 import {getWeb3, getRentContract} from "./utils.js"
-import CreateRentContract from "./CreateRentContract.js"
 import ListContracts from "./ListContracts.js"
 import SearchContract from "./SearchContract";
 import CreateAcceptRedeem from "./createAcceptRedeem";
+import ContractDetail from "./ContractDetail.js";
+import CreateContractButton from "./CreateAcceptRentButtons/CreateContractButton.js";
+import AcceptContractButton from "./CreateAcceptRentButtons/AcceptContractButton.js";
 
 
 
@@ -17,6 +19,7 @@ function App() {
   const [flowStep, setFlowStep]  = useState(0)
   const [activeContract, setActiveContract]  = useState(undefined)
   const [activeContractId, setActiveContractId]  = useState(undefined)
+  const [newContract, setNewContract] = useState({escrowValue:1000, contractDetail:"yada"})
 
   const defaultActiveContract = {
     "landlord": "Search for valid contract", 
@@ -72,32 +75,13 @@ function App() {
     
 
   }
-//passing whole object seems less readable? But function has less arguments? Case for OOP?
-  const submitRentContract = async  (newContract) => {
-    await rEsc.methods
-    .proposeNewContract(newContract["escrowValue"],newContract["contractDetail"])
-    .send({from: currentAccount,gas: 1000000})
-    
-    setListContracts(await rEsc.methods.getContractsByAddress().call({from: currentAccount}))
 
-  }
 
   const getContractDetail = async (rentId) => {
     let result = await rEsc.methods.rentContractsMapping(rentId).call() 
     // I need some error handling here in case, nothing is returned / the contract is not found
     result.landlord === "0x0000000000000000000000000000000000000000" ?  setActiveContract(defaultActiveContract): setActiveContract(result)
   }
-
-  const acceptRentContract = async (rentId) => {
-    await rEsc.methods
-    .acceptNewContract(rentId)
-    .send({from: currentAccount,value: Number(activeContract.escrowValue), gas: 1000000})
-
-    setListContracts(await rEsc.methods.getContractsByAddress().call({from: currentAccount}))
-  }
-
-
-
 
 
   if (
@@ -127,7 +111,15 @@ function App() {
             <p className="lead">Here you can manage your rent escrow proposal.
             As a <span className="fw-bold">Landlord</span> you can create rent contracts or redeemProposal. As a <span className="fw-bold">Tenant</span> you can accept both. </p>
 
-            {/* Listing contracts */}
+            
+              <SearchContract
+              setFlowStep = {setFlowStep}
+              setActiveContractId = {setActiveContractId}
+              getContractDetail = {getContractDetail}
+              activeContractId = {activeContractId}>
+              </SearchContract>
+            
+
             <ListContracts
               listContracts = {listContracts} 
               rEsc = {rEsc}
@@ -135,46 +127,53 @@ function App() {
               setFlowStep = {setFlowStep}
               getContractDetail = {getContractDetail}>
             </ListContracts>
-            <div className="d-md-flex">
-              <button className = "btn btn-small btn-secondary" onClick={()=> setFlowStep(0)}>
-              Create New Contract
-              </button>
-              <SearchContract
-              setFlowStep = {setFlowStep}
-              setActiveContractId = {setActiveContractId}
-              getContractDetail = {getContractDetail}
-              activeContractId = {activeContractId}>
-              </SearchContract>
-            </div>
 
             <div className="d-md-flex align-items-center justify-content-between mb-3">
-              <button className={flowStep ===0 ? "btn btn-secondary":"btn btn-primary"} >
+              <p className={flowStep ===0 ? "btn btn-primary":"btn btn-secondary"} >
                 Landlord: Create new Rent Contract
-              </button>
-              <button className={flowStep ===1 ? "btn btn-secondary":"btn btn-primary"}>
+              </p>
+              <p className={flowStep ===1 ? "btn btn-primary":"btn btn-secondary"}>
                 Tenant: Accept rent Contract
-            </button>
-            <button className={flowStep ===2 ? "btn btn-secondary":"btn btn-primary"} >
+            </p>
+            <p className={flowStep ===2 ? "btn btn-primary":"btn btn-secondary"} >
                 Landlord: Create Redeem
-            </button>
-            <button className={flowStep ===3 ? "btn btn-secondary":"btn btn-primary"} >
+            </p>
+            <p className={flowStep ===3 ? "btn btn-primary":"btn btn-secondary"} >
                 Tenant: Accept Redeem
-            </button>
+            </p>
 
             </div>
 
             
               <div className="container bg-light p-5">      
             
+              <ContractDetail
+                flowStep = {flowStep}
+                getContractDetail = {getContractDetail}
+                activeContract = {activeContract}
+                currentAccount = {currentAccount}
+                setNewContract = {setNewContract}
+                newContract = {newContract}>
+
+              </ContractDetail>
+
+              { flowStep === 0 && <CreateContractButton
+                flowStep = {flowStep}
+                newContract = {newContract}
+                rEsc={rEsc}
+                currentAccount = {currentAccount}
+                >
+                </CreateContractButton>
+              }
+
+                {flowStep === 1 && <AcceptContractButton
+                flowStep = {flowStep}
+                activeContract = {activeContract}
+                rEsc={rEsc}
+                currentAccount = {currentAccount}>
+                </AcceptContractButton>
+                }
             
-            <CreateRentContract 
-              submitRentContract = {submitRentContract} 
-              flowStep = {flowStep}
-              getContractDetail = {getContractDetail}
-              activeContract = {activeContract}
-              currentAccount = {currentAccount}
-              acceptRentContract = {acceptRentContract}>
-              </CreateRentContract>
             { (flowStep === 2 || flowStep === 3)  &&
             <CreateAcceptRedeem
               flowStep = {flowStep}
