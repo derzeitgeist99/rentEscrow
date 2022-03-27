@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import statusMapping from "./rentContractStatus.json"
 
 function ContractDetail ({flowStep,activeContract,currentAccount,setNewContract,newContract}) {
     
@@ -23,7 +24,7 @@ function ContractDetail ({flowStep,activeContract,currentAccount,setNewContract,
             <div className="d-md-flex mb-3">
                 <label className="form-label w-100" id="contractStatus">Contract Status</label>
                 <input type="text" className="form-control" id="contractStatus"
-                        placeholder={flowStep === 0 ? "TBD":activeContract.status}
+                        placeholder={flowStep === 0 ? "TBD":statusMapping[activeContract.status].status}
                         disabled/>
             </div>
             

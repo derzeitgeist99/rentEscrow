@@ -6,7 +6,7 @@ import AcceptRedeemProposalButton from"./createRedeemProposalButtons/AcceptRedee
 import DisputeRedeemProposal from"./createRedeemProposalButtons/DisputeRedeemProposalButton.js"
 
 
-function CreateAcceptRedeem ({flowStep,activeContract,currentAccount,rEsc}) {
+function CreateAcceptRedeem ({flowStep,activeContract,currentAccount,rEsc,setListContracts}) {
     const [escrowDistributionPct, setEscrowDistributionPct] = useState({"landlord":0,"tenant":100})
     const [escrowDistributionAbs, setEscrowDistributionAbs] = useState({"landlord":0,"tenant":0})
     const [isSliderDisabled, setIsSliderDisabled] = useState(true)
@@ -61,24 +61,30 @@ function CreateAcceptRedeem ({flowStep,activeContract,currentAccount,rEsc}) {
             escrowDistributionPct = {escrowDistributionPct}
             rEsc = {rEsc}
             currentAccount = {currentAccount}
+            setListContracts = {setListContracts}
             >
             </CreateRedeemButton>
         <AcceptRedeemProposalButton
             activeContract = {activeContract}
             rEsc = {rEsc}
             currentAccount = {currentAccount}
+            setListContracts = {setListContracts}
             >
             </AcceptRedeemProposalButton>
 
         <RejectRedeemProposalButton
             activeContract = {activeContract}
             rEsc = {rEsc}
-            currentAccount = {currentAccount}>
+            currentAccount = {currentAccount}
+            setListContracts = {setListContracts}
+            >
             </RejectRedeemProposalButton>
         <DisputeRedeemProposal
         activeContract = {activeContract}
         rEsc = {rEsc}
-        currentAccount = {currentAccount}>
+        currentAccount = {currentAccount}
+        setListContracts = {setListContracts}
+        >
         </DisputeRedeemProposal>
 
 

@@ -1,9 +1,9 @@
 import React from "react"
-import {createRedeemProposal} from "../Utils/ContractCalls.js"
+import {createRedeemProposal,getContractsByAddress} from "../Utils/ContractCalls.js"
 
 
 
-const CreateRedeemProposalButton = ({activeContract,escrowDistributionPct,rEsc,currentAccount}) => {
+const CreateRedeemProposalButton = ({activeContract,escrowDistributionPct,rEsc,currentAccount,setListContracts}) => {
 
     
     // Only landlord at status 200 can create redeem proposal
@@ -12,9 +12,10 @@ const CreateRedeemProposalButton = ({activeContract,escrowDistributionPct,rEsc,c
     let buttonVisible = (isLandlord && isStatusCorrect ) ? true:false
 
 
-    const handleCreateRedeemProposal = (event) => {
+    const handleCreateRedeemProposal = async (event) => {
         event.preventDefault()
-        createRedeemProposal(activeContract.rentId,escrowDistributionPct.tenant,escrowDistributionPct.landlord,0,rEsc,currentAccount) 
+        await createRedeemProposal(activeContract.rentId,escrowDistributionPct.tenant,escrowDistributionPct.landlord,0,rEsc,currentAccount) 
+        setListContracts( await getContractsByAddress(rEsc,currentAccount))
     }
 
  

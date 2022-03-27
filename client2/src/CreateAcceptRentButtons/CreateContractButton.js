@@ -1,11 +1,12 @@
 import React from 'react';
-import {proposeNewContract} from "../Utils/ContractCalls.js"
+import {proposeNewContract,getContractsByAddress} from "../Utils/ContractCalls.js"
 
-function CreateContractButton ({flowStep,newContract,rEsc,currentAccount}) {
+function CreateContractButton ({newContract,rEsc,currentAccount,setListContracts}) {
 
-    const handleCreateRentContract = (event) => {
+    const handleCreateRentContract =  async (event) => {
         event.preventDefault()
-        proposeNewContract(newContract,rEsc,currentAccount) 
+        await proposeNewContract(newContract,rEsc,currentAccount)
+        setListContracts( await getContractsByAddress(rEsc,currentAccount))
     }
 
     return (

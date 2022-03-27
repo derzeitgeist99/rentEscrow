@@ -162,6 +162,7 @@ function App() {
                 newContract = {newContract}
                 rEsc={rEsc}
                 currentAccount = {currentAccount}
+                setListContracts = {setListContracts}
                 >
                 </CreateContractButton>
               }
@@ -170,7 +171,9 @@ function App() {
                 flowStep = {flowStep}
                 activeContract = {activeContract}
                 rEsc={rEsc}
-                currentAccount = {currentAccount}>
+                currentAccount = {currentAccount}
+                setListContracts = {setListContracts}
+                >
                 </AcceptContractButton>
                 }
             
@@ -180,6 +183,7 @@ function App() {
               activeContract = {activeContract}
               currentAccount = {currentAccount}
               rEsc = {rEsc}
+              setListContracts = {setListContracts}
               >
             </CreateAcceptRedeem>
             }

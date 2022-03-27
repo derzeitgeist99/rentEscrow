@@ -1,15 +1,16 @@
 import React from 'react';
-import {acceptNewContract} from "../Utils/ContractCalls.js"
+import {acceptNewContract,getContractsByAddress} from "../Utils/ContractCalls.js"
 
-function AcceptContractButton ({flowStep,activeContract,rEsc,currentAccount}) {
+function AcceptContractButton ({flowStep,activeContract,rEsc,currentAccount,setListContracts}) {
 
     let isTenant = (activeContract.landlord != currentAccount) ? true:false
     let isStatusCorrect = (activeContract.status === "100") ? true:false
     let buttonDisabled = (isTenant && isStatusCorrect ) ? false:true
 
-    const handleAcceptRentContract = (event) => {
+    const handleAcceptRentContract = async (event) => {
         event.preventDefault()
-        acceptNewContract(activeContract,rEsc, currentAccount)
+        await acceptNewContract(activeContract,rEsc, currentAccount)
+        setListContracts( await getContractsByAddress(rEsc,currentAccount))
         
     }
 

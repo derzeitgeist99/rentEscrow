@@ -15,5 +15,9 @@
         "landlord":[2, "Wait for resolution"]},
     "400": {"status": "Escrow Redeemed",
         "tenant":[3,"Case Closed"],
-        "landlord":[3, "Case Closed"]}
+        "landlord":[3, "Case Closed"]},
+    "Search for valid contract": {"status": "Search for valid contract",
+        "tenant":[1,""],
+        "landlord":[1, ""]}
+
 }

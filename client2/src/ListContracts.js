@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import data from "./rentContractStatus.json"
+import statusMapping from "./rentContractStatus.json"
 import NextActionButton from "./nextActionButton.js"
 
 
@@ -54,7 +54,7 @@ function ListContracts ({listContracts, rEsc,currentAccount,setFlowStep,getContr
 
         <li className="list-group-item d-md-flex justify-content-between align-items-center"
             key = {contractDetail.rentId+contractDetail.landlord}>
-          <span className="badge bg-primary rounded-pill">{data[contractDetail.status].status}</span>
+          <span className="badge bg-primary rounded-pill">{statusMapping[contractDetail.status].status}</span>
           <p className="text-left">{"Contract Id "+  contractDetail.rentId}</p>
           <NextActionButton
           contractDetail = {contractDetail}

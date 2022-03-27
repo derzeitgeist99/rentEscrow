@@ -1,7 +1,7 @@
 import React from "react"
-import {rejectRedeemProposal} from "../Utils/ContractCalls.js"
+import {rejectRedeemProposal,getContractsByAddress} from "../Utils/ContractCalls.js"
 
-const RejectRedeemProposalButton = ({activeContract,rEsc,currentAccount}) => {
+const RejectRedeemProposalButton = ({activeContract,rEsc,currentAccount,setListContracts}) => {
 
     // Only tenant at status 300 can reject redeem proposal
 
@@ -9,9 +9,10 @@ const RejectRedeemProposalButton = ({activeContract,rEsc,currentAccount}) => {
     let isStatusCorrect = (activeContract.status === "300") ? true:false
     let buttonVisible = (isTenant && isStatusCorrect ) ? true:false
 
-    const handleRejectRedeemProposal = (event) => {
+    const handleRejectRedeemProposal = async (event) => {
         event.preventDefault()
-        rejectRedeemProposal(activeContract.rentId,rEsc,currentAccount)
+        await rejectRedeemProposal(activeContract.rentId,rEsc,currentAccount)
+        setListContracts( await getContractsByAddress(rEsc,currentAccount))
     }
 
 

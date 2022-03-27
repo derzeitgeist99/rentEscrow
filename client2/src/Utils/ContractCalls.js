@@ -39,3 +39,9 @@ export const acceptNewContract = async (activeContract,rEsc,currentAccount) => {
     
       }
 
+export const getContractsByAddress = async (rEsc,currentAccount) => { 
+    return await rEsc.methods
+    .getContractsByAddress()
+    .call({from: currentAccount})
+}
+
