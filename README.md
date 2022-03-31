@@ -1,7 +1,5 @@
 # rentEscrow
 
-## Our first use case is smart contract that manages escrow for rent
-
 Millions of people are living in a rent, they usually pay an escrow, that gets paid back after certain conditions are met. This escrow usually remains with the homeowner, who decides if conditions were met and returns the escrow. We want to bring more fairness to the process by holding the escrow in neutral smart contract
 
 ### High Level Mechanism
