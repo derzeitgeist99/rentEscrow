@@ -7,6 +7,7 @@ import CreateAcceptRedeem from "./createAcceptRedeem";
 import ContractDetail from "./ContractDetail.js";
 import CreateContractButton from "./CreateAcceptRentButtons/CreateContractButton.js";
 import AcceptContractButton from "./CreateAcceptRentButtons/AcceptContractButton.js";
+import MetaMaskInfo from "./MetaMaskInfo";
 
 
 
@@ -37,7 +38,7 @@ function App() {
     // this is initial load only
   useEffect(()=> {
     const init = async() => {
-      const web3 = getWeb3();
+      const web3 = await getWeb3();
       const accounts = await web3.eth.getAccounts()
       const rEsc = await getRentContract(web3)
       setWeb3(web3)
@@ -98,6 +99,10 @@ function App() {
     <nav className="navbar navbar-expand-lg bg-dark py-3 fixed-top">
       <div className="container">
         <span className="navbar-brand text-secondary">RentEscrow the App</span>
+        <MetaMaskInfo
+        currentAccount = {currentAccount}
+        setCurrentAccount = {setCurrentAccount}
+        ></MetaMaskInfo>
       </div>
     </nav>
 
@@ -107,7 +112,6 @@ function App() {
        
           <div className="">
             <h3 className="text-center">Rent Escrow Center</h3>
-          <button className="btn btn-primary" onClick = {() => handleAddressChange()}><span role="img" aria-label="fox">🦊 </span>{currentAccount}</button>
             <p className="lead">Here you can manage your rent escrow proposal.
             As a <span className="fw-bold">Landlord</span> you can create rent contracts or redeemProposal. As a <span className="fw-bold">Tenant</span> you can accept both. </p>
 

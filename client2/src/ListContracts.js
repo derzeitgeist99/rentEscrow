@@ -26,7 +26,7 @@ function ListContracts ({listContracts, rEsc,currentAccount,setFlowStep,getContr
     }
     init()
     // This is dependency, I want to update everytime the ListContracts Change
-},[listContracts])
+},[listContracts,currentAccount])
 
     
     if (typeof listOfContractDetails === "undefined" || listOfContractDetails.length === 0) {

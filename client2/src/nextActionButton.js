@@ -8,12 +8,11 @@ function NextActionButton ({contractDetail,currentAccount,setFlowStep,getContrac
     const [buttonMessage,setButtonMessage] = useState("...")
     
     useEffect(() =>{
-        //setButtonMessage(data["100"].status)
         
-        if (currentAccount === contractDetail.landlord) {
+        if (currentAccount.toLowerCase() === contractDetail.landlord.toLowerCase()) {
             setButtonTarget(allMessages[contractDetail.status]["landlord"][0])
             setButtonMessage(allMessages[contractDetail.status]["landlord"][1])
-        } else if (currentAccount === contractDetail.tenant)
+        } else if (currentAccount.toLowerCase() === contractDetail.tenant.toLowerCase())
         {
             setButtonTarget(allMessages[contractDetail.status]["tenant"][0])
             setButtonMessage(allMessages[contractDetail.status]["tenant"][1])
