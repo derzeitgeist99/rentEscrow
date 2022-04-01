@@ -17,7 +17,7 @@ function CreateAcceptRedeem ({flowStep,activeContract,currentAccount,rEsc,setLis
             "tenant": activeContract.redeemProposal.tenantShare
         
         })
-        // only case when you cab manipulate with slider is whne you are landlord and status is 200. 
+        // only case when you can manipulate with slider is when you are landlord and status is 200. 
         setIsSliderDisabled(true)
         if (activeContract.landlord === currentAccount && activeContract.status === "200") {
             setIsSliderDisabled(false)
@@ -29,7 +29,7 @@ function CreateAcceptRedeem ({flowStep,activeContract,currentAccount,rEsc,setLis
         event.preventDefault()
         setEscrowDistributionPct({"landlord":event.target.value, "tenant": 100-event.target.value})
         let escrowValue = Number(activeContract.escrowValue)
-        escrowValue != "NaN" && setEscrowDistributionAbs({"landlord":event.target.value * escrowValue/100, "tenant": (100-event.target.value) * escrowValue/100 })
+        escrowValue !== "NaN" && setEscrowDistributionAbs({"landlord":event.target.value * escrowValue/100, "tenant": (100-event.target.value) * escrowValue/100 })
 
     }
 

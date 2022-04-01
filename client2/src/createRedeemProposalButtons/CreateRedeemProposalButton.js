@@ -5,9 +5,9 @@ import {createRedeemProposal,getContractsByAddress} from "../Utils/ContractCalls
 
 const CreateRedeemProposalButton = ({activeContract,escrowDistributionPct,rEsc,currentAccount,setListContracts}) => {
 
-    
+
     // Only landlord at status 200 can create redeem proposal
-    let isLandlord = (activeContract.landlord === currentAccount) ? true:false
+    let isLandlord = (activeContract.landlord.toLowerCase() === currentAccount.toLowerCase()) ? true:false
     let isStatusCorrect = (activeContract.status === "200") ? true:false
     let buttonVisible = (isLandlord && isStatusCorrect ) ? true:false
 

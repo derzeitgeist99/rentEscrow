@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import statusMapping from "./rentContractStatus.json"
 
 function ContractDetail ({flowStep,activeContract,currentAccount,setNewContract,newContract}) {

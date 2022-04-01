@@ -3,7 +3,7 @@ import statusMapping from "./rentContractStatus.json"
 import NextActionButton from "./nextActionButton.js"
 
 
-function ListContracts ({listContracts, rEsc,currentAccount,setFlowStep,getContractDetail,}) {
+function ListContracts ({listContracts, rEsc,currentAccount,setFlowStep,getContractDetail,setActiveContract}) {
 
     const [listOfContractDetails,setListOfContractDetails] = useState([])
 
@@ -26,7 +26,7 @@ function ListContracts ({listContracts, rEsc,currentAccount,setFlowStep,getContr
     }
     init()
     // This is dependency, I want to update everytime the ListContracts Change
-},[listContracts,currentAccount])
+},[listContracts,currentAccount,rEsc])
 
     
     if (typeof listOfContractDetails === "undefined" || listOfContractDetails.length === 0) {
@@ -60,7 +60,9 @@ function ListContracts ({listContracts, rEsc,currentAccount,setFlowStep,getContr
           contractDetail = {contractDetail}
           currentAccount = {currentAccount}
           setFlowStep = {setFlowStep}
-          getContractDetail = {getContractDetail}>
+          getContractDetail = {getContractDetail}
+          setActiveContract = {setActiveContract}
+          rEsc = {rEsc}>
 
           </NextActionButton>
         </li>

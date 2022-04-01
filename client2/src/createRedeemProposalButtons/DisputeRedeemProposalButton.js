@@ -5,7 +5,7 @@ const DisputeRedeemProposal = ({activeContract,rEsc,currentAccount,setListContra
 
     // Only tenant at status 300 can dispute redeem proposal
 
-    let isTenant = (activeContract.tenant === currentAccount) ? true:false
+    let isTenant = (activeContract.tenant.toLowerCase() === currentAccount.toLowerCase()) ? true:false
     let isStatusCorrect = (activeContract.status === "300") ? true:false
     let buttonVisible = (isTenant && isStatusCorrect ) ? true:false
 

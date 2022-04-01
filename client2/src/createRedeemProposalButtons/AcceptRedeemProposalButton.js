@@ -5,7 +5,10 @@ const AcceptRedeemProposalButton = ({activeContract,rEsc,currentAccount,setListC
 
 // Only tenant at status 300 can accept redeem proposal
 
-let isTenant = (activeContract.tenant === currentAccount) ? true:false
+
+console.log(typeof activeContract.tenant);
+console.log(currentAccount);
+let isTenant = (activeContract.tenant.toLowerCase() === currentAccount.toLowerCase()) ? true:false
     let isStatusCorrect = (activeContract.status === "300") ? true:false
     let buttonVisible = (isTenant && isStatusCorrect ) ? true:false
 

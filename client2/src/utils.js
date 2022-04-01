@@ -2,7 +2,7 @@ import Web3 from "web3"
 import detectEthereumProvider from '@metamask/detect-provider'
 import RentEscrow from "./contracts/rentEscrow.json"
 
-const getWeb3 = () =>
+export const getWeb3 = () =>
 
     new Promise( async (resolve, reject) => {
         // detectEthereumProvider: makes sure that MetaMask is loaded
@@ -12,7 +12,6 @@ const getWeb3 = () =>
             await provider.request({ method: 'eth_requestAccounts' });
             try {
                 const web3 = new Web3(window.ethereum);
-                console.log(web3)
                 resolve(web3);
             } catch(error) {
                 reject(error);
@@ -21,7 +20,7 @@ const getWeb3 = () =>
 
 });
 
-const getRentContract = async web3 => {
+export const getRentContract = async web3 => {
     const networkId = await web3.eth.net.getId();
 
     const contractDeployment = RentEscrow.networks[networkId]
@@ -31,5 +30,15 @@ const getRentContract = async web3 => {
 
 }
 
-
-export {getWeb3, getRentContract}   
+export const defaultActiveContract = {
+    "landlord": "Search for valid contract", 
+    "escrowValue":"Search for valid contract",
+    "contractDetail":"Search for valid contract",
+    "status":"Search for valid contract",
+    "redeemProposal": {
+      "tenantShare":"Search for valid contract",
+      "landlordShare":"Search for valid contract",
+      "feeShare":"Search for valid contract",
+      "feeAddress":"Search for valid contract",
+      
+    }}

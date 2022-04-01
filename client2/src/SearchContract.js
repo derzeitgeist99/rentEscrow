@@ -1,17 +1,20 @@
-import React from "react";
+import React,{useState} from "react";
+import {defaultActiveContract} from "./utils.js"
 
-function SearchContract ({getContractDetail,setActiveContractId,activeContractId, setFlowStep}) {
+function SearchContract ({setFlowStep,setActiveContract,rEsc}) {
+ const [searchContractId, setSearchContractId] = useState(undefined)
 
 
-    const handleSearchContract = (event) => {
+    const handleSearchContract = async (event) => {
         event.preventDefault()
-        getContractDetail(activeContractId)
         setFlowStep(1)
+        let result = await rEsc.methods.rentContractsMapping(searchContractId).call() 
+        result.landlord === "0x0000000000000000000000000000000000000000" ?  setActiveContract(defaultActiveContract): setActiveContract(result)
     }
 
     const handleChange = (event) => {
         event.preventDefault()
-        setActiveContractId(event.target.value)
+        setSearchContractId(event.target.value)
     } 
 
     return(<div className="d-md-flex mb-3 justify-content-start">

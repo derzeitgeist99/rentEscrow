@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from "react"
 import './App.css';
-import {getWeb3, getRentContract} from "./utils.js"
+import {getWeb3, getRentContract,defaultActiveContract} from "./utils.js"
 import ListContracts from "./ListContracts.js"
 import SearchContract from "./SearchContract";
 import CreateAcceptRedeem from "./createAcceptRedeem";
@@ -11,6 +11,7 @@ import MetaMaskInfo from "./MetaMaskInfo";
 
 
 
+
 function App() {
   const [web3, setWeb3]  = useState(undefined)
   const [accounts, setAccounts]  = useState(undefined)
@@ -18,22 +19,10 @@ function App() {
   const [currentAccount, setCurrentAccount]  = useState(undefined)
   const [listContracts, setListContracts]  = useState([])
   const [flowStep, setFlowStep]  = useState(0)
-  const [activeContract, setActiveContract]  = useState(undefined)
-  const [activeContractId, setActiveContractId]  = useState(undefined)
+  const [activeContract, setActiveContract]  = useState(defaultActiveContract)
   const [newContract, setNewContract] = useState({escrowValue:1000, contractDetail:"yada"})
 
-  const defaultActiveContract = {
-    "landlord": "Search for valid contract", 
-    "escrowValue":"Search for valid contract",
-    "contractDetail":"Search for valid contract",
-    "status":"Search for valid contract",
-    "redeemProposal": {
-      "tenantShare":"Search for valid contract",
-      "landlordShare":"Search for valid contract",
-      "feeShare":"Search for valid contract",
-      "feeAddress":"Search for valid contract",
-      
-    }}
+
 
     // this is initial load only
   useEffect(()=> {
@@ -45,9 +34,6 @@ function App() {
       setAccounts(accounts)
       setrEsc(rEsc)
       setCurrentAccount(accounts[0])
-      setListContracts(await rEsc.methods.getContractsByAddress().call({from: currentAccount}))
-      setActiveContract(defaultActiveContract)
-
     }
     init()
   },[])
@@ -55,34 +41,12 @@ function App() {
  // this is updated based on dependency
   useEffect(() => {
     const init = async () => {
-      rEsc&& await setListContracts(await rEsc.methods.getContractsByAddress().call({from: currentAccount}))
-      rEsc && activeContractId && getContractDetail(activeContractId)
+      rEsc&& setListContracts(await rEsc.methods.getContractsByAddress().call({from: currentAccount}))
      }
   init()
-  },[currentAccount])
-
-  const handleAddressChange = () => {
-
-    switch (currentAccount) {
-      case accounts[0]:
-        setCurrentAccount(accounts[1])
-        break
-      case accounts[1]:
-        setCurrentAccount(accounts[0])
-        break
-      default:
-        setCurrentAccount(accounts[1])
-    }
-    
-
-  }
+  },[currentAccount,rEsc])
 
 
-  const getContractDetail = async (rentId) => {
-    let result = await rEsc.methods.rentContractsMapping(rentId).call() 
-    // I need some error handling here in case, nothing is returned / the contract is not found
-    result.landlord === "0x0000000000000000000000000000000000000000" ?  setActiveContract(defaultActiveContract): setActiveContract(result)
-  }
 
 
   if (
@@ -118,9 +82,9 @@ function App() {
             
               <SearchContract
               setFlowStep = {setFlowStep}
-              setActiveContractId = {setActiveContractId}
-              getContractDetail = {getContractDetail}
-              activeContractId = {activeContractId}>
+              setActiveContract = {setActiveContract}
+              rEsc = {rEsc}
+              >
               </SearchContract>
             
 
@@ -129,7 +93,7 @@ function App() {
               rEsc = {rEsc}
               currentAccount = {currentAccount}
               setFlowStep = {setFlowStep}
-              getContractDetail = {getContractDetail}>
+              setActiveContract = {setActiveContract}>
             </ListContracts>
 
             <div className="d-md-flex align-items-center justify-content-between mb-3">
@@ -153,7 +117,6 @@ function App() {
             
               <ContractDetail
                 flowStep = {flowStep}
-                getContractDetail = {getContractDetail}
                 activeContract = {activeContract}
                 currentAccount = {currentAccount}
                 setNewContract = {setNewContract}

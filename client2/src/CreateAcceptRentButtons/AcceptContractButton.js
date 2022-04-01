@@ -3,7 +3,7 @@ import {acceptNewContract,getContractsByAddress} from "../Utils/ContractCalls.js
 
 function AcceptContractButton ({flowStep,activeContract,rEsc,currentAccount,setListContracts}) {
 
-    let isTenant = (activeContract.landlord != currentAccount) ? true:false
+    let isTenant = (activeContract.landlord !== currentAccount) ? true:false
     let isStatusCorrect = (activeContract.status === "100") ? true:false
     let buttonDisabled = (isTenant && isStatusCorrect ) ? false:true
 
