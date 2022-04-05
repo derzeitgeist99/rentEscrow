@@ -1,7 +1,8 @@
-import React from 'react';
+import React,{useEffect, useState} from 'react';
 import statusMapping from "./rentContractStatus.json"
 
 function ContractDetail ({flowStep,activeContract,currentAccount,setNewContract,newContract}) {
+    const [visibleTenantAddress,setVisibleTenantAddress] = useState(undefined)
     
 
     const newContractUpdate = (event, field) => {
@@ -9,6 +10,22 @@ function ContractDetail ({flowStep,activeContract,currentAccount,setNewContract,
         setNewContract({...newContract, [field]: value})
 
     }
+useEffect(() => {
+    const switchTenantAddress = () => {
+    switch(flowStep) {
+
+        case 0: setVisibleTenantAddress("TBD")
+        break;
+        case 1: setVisibleTenantAddress(currentAccount)
+        break;
+        case 2: setVisibleTenantAddress(activeContract.tenant)
+        break;
+        case 3: setVisibleTenantAddress(activeContract.tenant)
+        break;
+        
+    }}
+switchTenantAddress()},[activeContract])
+    
 
     return (
         <div className="">
@@ -38,7 +55,7 @@ function ContractDetail ({flowStep,activeContract,currentAccount,setNewContract,
                 <div className="d-md-flex mb-3">
                     <label className="form-label w-100" id="tenant">Tenant</label>
                     <input type="number" className="form-control" id="tenant"
-                            placeholder={flowStep === 0 ? "TBD":currentAccount}
+                            placeholder= {visibleTenantAddress}
                             disabled/>
                 </div>
                 {/* Bug: when user inputs something in the Landlord form, it remains visible. Should be overrriden by activeContract */}

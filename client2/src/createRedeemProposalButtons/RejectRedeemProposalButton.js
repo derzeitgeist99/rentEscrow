@@ -6,8 +6,9 @@ const RejectRedeemProposalButton = ({activeContract,rEsc,currentAccount,setListC
     // Only tenant at status 300 can reject redeem proposal
 
     let isTenant = (activeContract.tenant.toLowerCase() === currentAccount.toLowerCase()) ? true:false
+    let isLandlord = (activeContract.landlord.toLowerCase() === currentAccount.toLowerCase()) ? true:false
     let isStatusCorrect = (activeContract.status === "300") ? true:false
-    let buttonVisible = (isTenant && isStatusCorrect ) ? true:false
+    let buttonVisible = (isTenant||isLandlord && isStatusCorrect ) ? true:false
 
     const handleRejectRedeemProposal = async (event) => {
         event.preventDefault()

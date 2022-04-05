@@ -28,6 +28,7 @@ function App() {
   useEffect(()=> {
     const init = async() => {
       const web3 = await getWeb3();
+      //console.log(web3);
       const accounts = await web3.eth.getAccounts()
       const rEsc = await getRentContract(web3)
       setWeb3(web3)

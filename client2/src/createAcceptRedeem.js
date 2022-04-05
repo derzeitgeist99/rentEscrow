@@ -19,7 +19,7 @@ function CreateAcceptRedeem ({flowStep,activeContract,currentAccount,rEsc,setLis
         })
         // only case when you can manipulate with slider is when you are landlord and status is 200. 
         setIsSliderDisabled(true)
-        if (activeContract.landlord === currentAccount && activeContract.status === "200") {
+        if (activeContract.landlord.toLowerCase() === currentAccount.toLowerCase() && activeContract.status === "200") {
             setIsSliderDisabled(false)
         }
         
