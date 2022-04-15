@@ -1,0 +1,6 @@
+{
+    "name": "Hello",
+    "description": "Hello2",
+    "image": ".img",
+    "attributes": [{"trait_type": "cuteness", "value": 100}]
+}

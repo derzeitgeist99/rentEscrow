@@ -25,33 +25,12 @@ Millions of people are living in a rent, they usually pay an escrow, that gets p
 4)  0 to 100% of escrow is returned by the smart contract to tenants address
 
 
-# Definition of Prototype II (NFT based)
-This is second iteration. Now I take different UX approach: I start from definition of contract as an NFT token. This gets transferred into Ethereum accounts and only holders can accept the contract. This assures better that Landlord and Tenant are agreeing to the same thing. 
-What will I learn new
-- use openzeppelin
-- publish to IPFS
-- Test Driven Development
-## Elements
-- FE to define Contract NFT input
-- Upload document to IPFS using Pinata
-- Smart contract to hold the token
-- Smart contract to accept contract based on token
-
-### Out of scope
-- FE to accept contract, create/accept redeem proposal
-- Smart contract features for create/accept redeem proposal
-
-### Actions visible to user
-- Input contract NFT metadata
-- Upload and Pin file to IPFS
-- Mint Contract NFT
-- Accept contract if address is NFT holder
-
-# Definition of the Prototype I (this is kind of done)
+# Definition of the Prototype I
 ## Elements
 - Front end to define smart contract inputs ✅
 - Smart Contract ✅
 - Front End for Dispute Resolution
+- storage of detailed contract description on IPFS
 ## Other features
 - Deployed on Ethereum TestNet ✅
 - Disregarding gas costs (we will worry with L2 later) ✅
@@ -61,7 +40,7 @@ What will I learn new
 - UX can be clunky (eg - synchronous steps, landlord does A, then tenant does B) ✅
 - Safety considered❓
 ### Out of scope
-- storage of rent contract details (idea is that there will be detailed description on IPFS link)
+- 
 ### Actions visible to users
 - Initiate rent contract
     - Propose by Landlord (escrow Amount, insert details)
