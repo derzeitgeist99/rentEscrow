@@ -34,10 +34,10 @@ Millions of people are living in a rent, they usually pay an escrow, that gets p
 
 ## Other features
 
-- Deployed on Ethereum TestNet
+- Deployed on Ethereum TestNet ✅
 - Disregarding gas costs (we will worry with L2 later) ✅
 - Dispute resolution is centralized and calls a smart contract function ✅
-- Metamask
+- Metamask ✅
 - transacting in ETH ✅
 - UX can be clunky (eg - synchronous steps, landlord does A, then tenant does B) ✅
 - Safety considered❓
@@ -54,3 +54,25 @@ Millions of people are living in a rent, they usually pay an escrow, that gets p
 - Redeem Escrow
     - Propose by Landlord (define split 0-100%)
     - Accept, Reject, Create Dispute by Tenant
+
+# Definition of Prototype II (NFT based)
+This time I take different UX approach: I start from definition of contract as an NFT token. This gets transferred into Ethereum accounts and only holders can accept the contract. This assures better that Landlord and Tenant are agreeing to the same thing. 
+What will I learn new
+- use openzeppelin
+- publish to IPFS
+- Test Driven Development
+## Elements
+- FE to define Contract NFT input
+- Upload document to IPFS using Pinata
+- Smart contract to hold the token
+- Smart contract to accept contract based on token
+
+### Out of scope
+- FE to accept contract, create/accept redeem proposal
+- Smart contract features for create/accept redeem proposal
+
+### Actions visible to user
+- Input contract NFT metadata
+- Upload and Pin file to IPFS
+- Mint Contract NFT
+- Accept contract if address is NFT holder
