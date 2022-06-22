@@ -85,8 +85,8 @@ switchTenantAddress()},[activeContract])
                
             </form>
 
-            <LoadContractDocumentation>
-</LoadContractDocumentation>
+            {/* <LoadContractDocumentation>
+</LoadContractDocumentation> */}
          </div>
     )
 
