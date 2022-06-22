@@ -29,7 +29,9 @@ Millions of people are living in a rent, they usually pay an escrow, that gets p
 ### Elements
 
 - Front end to define smart contract inputs ✅
-- Smart Contract ✅
+- Smart Contract for
+-- Rent Escrow✅
+-- Dispute Resolution ✅
 - Front End for Dispute Resolution
 - storage of detailed contract description on IPFS
 
