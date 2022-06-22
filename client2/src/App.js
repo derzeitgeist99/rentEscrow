@@ -12,6 +12,7 @@ import MetaMaskInfo from "./MetaMaskInfo";
 
 
 
+
 function App() {
   const [web3, setWeb3]  = useState(undefined)
   const [accounts, setAccounts]  = useState(undefined)
@@ -79,7 +80,6 @@ function App() {
             <h3 className="text-center">Rent Escrow Center</h3>
             <p className="lead">Here you can manage your rent escrow proposal.
             As a <span className="fw-bold">Landlord</span> you can create rent contracts or redeemProposal. As a <span className="fw-bold">Tenant</span> you can accept both. </p>
-
             
               <SearchContract
               setFlowStep = {setFlowStep}
@@ -165,9 +165,6 @@ function App() {
           <div className="container">
             <h3 className="text-center">Dispute Resolution Center</h3>
           </div>
-
-      
-  
 
     </section>
 </div>

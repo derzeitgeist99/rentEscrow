@@ -1,5 +1,6 @@
 import React,{useEffect, useState} from 'react';
 import statusMapping from "./rentContractStatus.json"
+import LoadContractDocumentation from "./LoadContractDocumentation";
 
 function ContractDetail ({flowStep,activeContract,currentAccount,setNewContract,newContract}) {
     const [visibleTenantAddress,setVisibleTenantAddress] = useState(undefined)
@@ -71,6 +72,7 @@ switchTenantAddress()},[activeContract])
 
                 <div className="d-md-flex mb-3">
                     <label className="form-label w-100" id="contractdetail">Link to Contract Detail</label>
+
                     <input type="http"
                     className="form-control"
                     id="contractdetail"
@@ -82,6 +84,9 @@ switchTenantAddress()},[activeContract])
 
                
             </form>
+
+            <LoadContractDocumentation>
+</LoadContractDocumentation>
          </div>
     )
 
