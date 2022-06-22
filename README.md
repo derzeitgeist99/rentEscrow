@@ -58,4 +58,7 @@ Millions of people are living in a rent, they usually pay an escrow, that gets p
 
 ### Demo
 
-<img src = "Rent Escrow Demo.gif"/>
+<img src = "Readmefiles/Rent Escrow Demo.gif"/>
+
+<br/>
+<img src = "Readmefiles/Screenshot.png" />
